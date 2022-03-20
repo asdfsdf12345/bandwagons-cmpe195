@@ -1,3 +1,4 @@
+/*all*/
 *{
   margin: 0;
   padding: 0;
@@ -5,8 +6,13 @@
   scroll-behavior: smooth;
 }
 
+/*links*/
 a{
   text-decoration: none;
   color: red;
 }
-  
+
+/*homepage images*/
+#banner1{
+  width: 100%;
+}

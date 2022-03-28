@@ -1,6 +1,8 @@
 import { IconButton, Menu, MenuItem, AppBar, Container, Toolbar, Typography, makeStyles } from '@material-ui/core'
 import React from 'react'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import LoginModal from '../Authetication/LoginModal';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
     title:{
@@ -8,7 +10,9 @@ const useStyles = makeStyles(() => ({
       fontWeight: "bold",
       cursor: "pointer",
       marginLeft: 0, 
-    }
+    },
+
+    
 
 }))
 
@@ -23,19 +27,22 @@ const Header = () => {
         setAnchorEl(event.currentTarget)
     }
 
+    const history = useHistory();
+
     const classes=useStyles();
 
   return (
     <AppBar color='transparent' position='static' >
-        <Container style={{marginLeft:0,}}>
+        
             <Toolbar>
-                <Typography className={classes.title}>
-                    LikeHome.com
+                <Typography onClick={() => history.push('/')} className={classes.title}>
+                    Bandwagons
                 </Typography>
+                <LoginModal/>
                 <IconButton 
                 color="default"
                 onClick={(openMenu)}
-                style={{ width: 100, height: 40, MarginRight: 15 }}
+                style={{ width: 0, height: 40, MarginRight: 30 }}
                 >
                     <ArrowDropDownIcon/>
                 </IconButton>
@@ -77,11 +84,10 @@ const Header = () => {
                     >
                     Log Out
                     </MenuItem>
-                    
                 </Menu>
             </Toolbar>
             
-        </Container>
+      
 
     </AppBar>   
   )

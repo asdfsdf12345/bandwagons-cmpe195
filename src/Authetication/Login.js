@@ -9,7 +9,6 @@ const Login = ({handleClose}) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const {setAlert} = NavigationState();
 
   const handleSubmit = async () => {
@@ -21,7 +20,6 @@ const Login = ({handleClose}) => {
       });
       return;
     }
-
     try{
       const result = await signInWithEmailAndPassword(
         auth,email, password
@@ -42,6 +40,7 @@ const Login = ({handleClose}) => {
       });
     }
   };
+  
   return (
     <Box 
         p={3}

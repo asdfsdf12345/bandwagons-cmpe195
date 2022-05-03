@@ -31,3 +31,4 @@ export default NavigationContext;
 export const NavigationState = () => {
   return useContext(Navigation);
 };
+

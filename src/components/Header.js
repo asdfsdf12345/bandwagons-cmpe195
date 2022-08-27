@@ -1,8 +1,10 @@
-import { IconButton, Menu, MenuItem, AppBar, Container, Toolbar, Typography, makeStyles } from '@material-ui/core'
+import { IconButton, Menu, MenuItem, AppBar, Container, Toolbar, Typography, makeStyles, Button } from '@material-ui/core'
 import React from 'react'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import LoginModal from '../Authetication/LoginModal';
 import { useHistory } from 'react-router-dom';
+import { useContext } from 'react';
+import { NavigationState } from '../NavigationContext';
 
 const useStyles = makeStyles(() => ({
     title:{
@@ -28,7 +30,7 @@ const Header = () => {
     }
 
     const history = useHistory();
-
+    const {user} = NavigationState();
     const classes=useStyles();
 
   return (
@@ -38,7 +40,7 @@ const Header = () => {
                 <Typography onClick={() => history.push('/')} className={classes.title}>
                     Bandwagons
                 </Typography>
-                <LoginModal/>
+                {user? <Button></Button>:<LoginModal/>}
                 <IconButton 
                 color="default"
                 onClick={(openMenu)}
@@ -77,12 +79,6 @@ const Header = () => {
                         id = 'Settings'
                     >
                     Settings
-                    </MenuItem>
-                    <MenuItem
-                        onClick={handleClose}
-                        id = 'Logout'
-                    >
-                    Log Out
                     </MenuItem>
                 </Menu>
             </Toolbar>

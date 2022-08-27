@@ -31,9 +31,9 @@ function App() {
       <Route path='/profile' component={ProfilePage }/>
       <Route path='/friends' component={FriendsPage }/>
       <Route path='/events' component={EventsPage }/>
-    </div>
-    <Alert/>
-    </BrowserRouter>
+      <Route path='/hello' component={ProfilePage }/>
+      </div>
+      </BrowserRouter>
   )
 }
 

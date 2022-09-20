@@ -7,6 +7,7 @@ import SettingsPage from './Pages/SettingsPage';
 import ProfilePage from './Pages/ProfilePage';
 import FriendsPage from './Pages/FriendsPage';
 import EventsPage from './Pages/EventsPage';
+import FinderPage from './Pages/FinderPage';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from './components/Alert';
 
@@ -31,6 +32,7 @@ function App() {
       <Route path='/profile' component={ProfilePage }/>
       <Route path='/friends' component={FriendsPage }/>
       <Route path='/events' component={EventsPage }/>
+      <Route path='/finder' component={FinderPage }/>
     </div>
     <Alert/>
     </BrowserRouter>

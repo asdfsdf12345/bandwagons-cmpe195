@@ -59,8 +59,6 @@ export default function HobbyTagChoices() {
             <ToggleButton value="Restoration" aria-label="Restoration">Restoration</ToggleButton>
             <ToggleButton value="Animals" aria-label="Animals">Animals</ToggleButton>
         </ToggleButtonGroup>
-
-
     </div>
 
   );

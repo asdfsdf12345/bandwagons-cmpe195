@@ -1,3 +1,5 @@
+// Show user's added Groups
+
 import React from 'react'
 
 const GroupsPage = () => {

@@ -48,10 +48,17 @@ export default function BasicTextFields() {
       noValidate
       autoComplete="off"
     >
-            <TextField
+      <TextField
         id="standard-name-input"
         label="Name"
         type="name"
+        variant="standard"
+      />
+
+      <TextField
+        id="standard-bio-input"
+        label="Bio"
+        type="bio"
         variant="standard"
       />
 

@@ -27,14 +27,6 @@ function AvatarUpload() {
         src={null}
       />
       <br/>
-      {preview && (
-        <>
-          <img src={preview} alt="Preview" />
-          <a href={preview} download="avatar">
-            Download image
-          </a>
-        </>
-      )}
     </div>
   );
 }

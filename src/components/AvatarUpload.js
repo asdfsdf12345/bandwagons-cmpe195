@@ -1,43 +1,41 @@
-import { Avatar, IconButton } from "@material-ui/core";
-import React, { useRef, useState } from "react";
+import React from "react";
+import Avatar from "react-avatar-edit";
+import { useState } from "react";
 
-const AvatarUpload = () => { 
-  const [selectedImage, setSelectedImage] = useState();
-  const inputRef = useRef(null);
-
-  const handleChange = (event) => {
-    setSelectedImage(event.target.files[0]);
-  };
-
-  const handleClick = (event) => {
-    inputRef.current.click();
-  };
-
+function AvatarUpload() {
+  const [preview, setPreview] = useState(null);
+  function onClose() {
+    setPreview(null);
+  }
+  function onCrop(pv) {
+    setPreview(pv);
+  }
+  function onBeforeFileLoad(elem) {
+    if (elem.target.files[0].size > 2000000) {
+      alert("File is too big!");
+      elem.target.value = "";
+    }
+  }
   return (
-  <>
-    <input
-      accept="image/*"
-      style={{ display: 'none' }}
-      onChange={handleChange}
-      id="raised-button-file"
-      multiple
-      type="file"
-    />
-    <IconButton>
-      <label htmlFor="raised-button-file">
-        <Avatar 
-          src={selectedImage}
-          style={{
-            margin: "10px",
-            width: "60px",
-            height: "60px",
-          }} 
-        />
-      </label>  
-    </IconButton>
-    
-    
-  </>
-)};
-
+    <div>
+      <Avatar
+        width={600}
+        height={300}
+        onCrop={onCrop}
+        onClose={onClose}
+        onBeforeFileLoad={onBeforeFileLoad}
+        src={null}
+      />
+      <br/>
+      {preview && (
+        <>
+          <img src={preview} alt="Preview" />
+          <a href={preview} download="avatar">
+            Download image
+          </a>
+        </>
+      )}
+    </div>
+  );
+}
 export default AvatarUpload;

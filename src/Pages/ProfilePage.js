@@ -17,6 +17,7 @@ const ProfilePage = () => {
       </div>
       
       <><BasicTextFields/></>
+      <><AvatarUpload/></>
       <div>Pick your preferences</div>
       <><HobbyTagChoices/></>
       <br/><br/><br/>

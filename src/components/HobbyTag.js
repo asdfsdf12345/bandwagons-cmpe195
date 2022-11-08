@@ -18,7 +18,7 @@ export default function HobbyTagChoices() {
         onChange={handleFormat}
         aria-label="text formatting"
         >
-            <ToggleButton value="Painting" aria-label="Painting">Painting</ToggleButton>
+            <ToggleButton value="Painting" aria-label="Painting">Painting🍔</ToggleButton>
             <ToggleButton value="Crafts" aria-label="Crafts">Crafts</ToggleButton>
             <ToggleButton value="Music" aria-label="Music">Music</ToggleButton>
             <ToggleButton value="Dance" aria-label="Dance">Dance</ToggleButton>

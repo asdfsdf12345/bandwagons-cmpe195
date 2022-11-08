@@ -19,8 +19,8 @@ function AvatarUpload() {
   return (
     <div>
       <Avatar
-        width={600}
-        height={300}
+        width={200}
+        height={200}
         onCrop={onCrop}
         onClose={onClose}
         onBeforeFileLoad={onBeforeFileLoad}

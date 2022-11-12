@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { CenterFocusStrong } from '@material-ui/icons';
 
 const states = [
   {value: 'Alabama'}, {value: 'Alaska'},
@@ -41,27 +42,41 @@ export default function BasicTextFields() {
 
   return (
     <Box
-      component="form"
+      component = "form"
+      display = "flex"
+      flexDirection = "column"
+      alignItems = "center"
       sx={{
-        '& > :not(style)': { m: 1, width: '25ch' },
+        '& > :not(style)': { m: 1, width: '50ch' },       
       }}
       noValidate
       autoComplete="off"
     >
+      <div>
       <TextField
         id="standard-name-input"
         label="Name"
         type="name"
-        variant="standard"
+        fullWidth
+        variant="outlined"
+        size="small"
       />
+      </div>
 
+      <div>
       <TextField
         id="standard-bio-input"
         label="Bio"
         type="bio"
-        variant="standard"
+        multiline
+        rows={4}
+        fullWidth
+        variant="outlined"
+        size="normal"
       />
+      </div>
 
+      <div>
       <TextField
         id="standard-states-select"
         select
@@ -69,7 +84,9 @@ export default function BasicTextFields() {
         value={state}
         onChange={handleStateChange}
         helperText="Please select your state"
-        variant="standard"
+        fullWidth
+        variant="outlined"
+        size="small"
       >
         {states.map((option) => (
           <MenuItem key={option.value} value={option.value}>
@@ -77,6 +94,7 @@ export default function BasicTextFields() {
           </MenuItem>
         ))}
       </TextField>
+      </div>
 
     </Box>
   );

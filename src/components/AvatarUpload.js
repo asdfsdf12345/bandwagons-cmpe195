@@ -1,4 +1,5 @@
 import React from "react";
+import Box from '@mui/material/Box';
 import Avatar from "react-avatar-edit";
 import { useState } from "react";
 
@@ -17,10 +18,21 @@ function AvatarUpload() {
     }
   }
   return (
+    <Box
+      component = "form"
+      display = "flex"
+      flexDirection = "column"
+      alignItems = "center"
+      sx={{
+        '& > :not(style)': { m: 1},       
+      }}
+      noValidate
+      autoComplete="off"
+    >
     <div>
       <Avatar
-        width={600}
-        height={300}
+        width={200}
+        height={200}
         onCrop={onCrop}
         onClose={onClose}
         onBeforeFileLoad={onBeforeFileLoad}
@@ -36,6 +48,7 @@ function AvatarUpload() {
         </>
       )}
     </div>
+    </Box>
   );
 }
 export default AvatarUpload;

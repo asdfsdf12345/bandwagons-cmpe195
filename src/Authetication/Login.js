@@ -3,6 +3,7 @@ import { Box, Button, TextField } from "@material-ui/core";
 import { NavigationState } from '../NavigationContext';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useHistory } from 'react-router-dom';
 
 
 const Login = ({handleClose}) => {
@@ -10,6 +11,7 @@ const Login = ({handleClose}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const {setAlert} = NavigationState();
+  const history = useHistory();
 
   const handleSubmit = async () => {
     if(!email || !password) {
@@ -32,6 +34,8 @@ const Login = ({handleClose}) => {
           });
 
           handleClose();
+          history.push("/profile")
+
     }catch (error) {
       setAlert({
         open: true,

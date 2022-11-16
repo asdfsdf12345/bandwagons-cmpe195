@@ -35,6 +35,7 @@ function App() {
       <Route path='/events' component={EventsPage }/>
       <Route path='/groups' component={GroupsPage }/>
       <Route path='/finder' component={FinderPage }/>
+      <Route path='/groups' component={GroupsPage} />
     </div>
     <Alert/>
     </BrowserRouter>

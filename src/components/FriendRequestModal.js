@@ -3,14 +3,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import { Button, ListItem, ListItemText, TextField } from '@material-ui/core';
+import { Button, Divider, IconButton, ListItem, ListItemSecondaryAction, ListItemText, TextField } from '@material-ui/core';
 import { NavigationState } from '../NavigationContext';
 import { useState } from 'react';
 import { async } from '@firebase/util';
-import { addDoc, collection, doc, getDocs, onSnapshot, query, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { FixedSizeList } from 'react-window';
 import PropTypes from 'prop-types';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ClearIcon from '@material-ui/icons/Clear';
+import { borderBottom } from '@mui/system';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -31,16 +34,24 @@ export default function FriendRequestModal() {
   const [open, setOpen] = useState(false);
   const [requestEmail, setRequestEmail] = useState("");
   const {setAlert, user} = NavigationState();
- 
-  
+  const [requested, setRequested] = useState([]);
 
-
-  const displayFriendRequest = async () => {
-
+  const findFriendRequest = async () => {
     try{
-      
-      
-            
+      const friendRef = collection(db, "FriendRequests");
+      const q = query(friendRef, where("uEmail2", "==", user.email)); 
+      const querySnapshot = onSnapshot(q, (querySnapshot) => {
+      const results = [];
+      querySnapshot.forEach((doc) => {
+      results.push(doc.data().uEmail);
+      console.log(requested);
+  });
+  setRequested(results);
+});
+
+
+        
+    
       }catch (error) {
         setAlert({
           open: true,
@@ -52,23 +63,38 @@ export default function FriendRequestModal() {
 
   const handleOpen = () => {
     setOpen(true);
+    findFriendRequest();
   };
 
   const handleClose = () => {
     setOpen(false);
-    unsubscribe();
+    
   };
 
   function renderRow(props) {
     const { index, style } = props;
   
     return (
-      <ListItem button style={style} key={index}>
-        <ListItemText primary={`Item ${requested[index]}`} />
+        
+      <ListItem style={style} key={index}>
+        <ListItemText primary={`${requested[index]}`} />
+        
+              <IconButton edge="end" 
+              style={{ color: "#2ab530"}}
+              >
+                <CheckCircleIcon />
+              </IconButton>
+              <IconButton 
+              edge="end"
+              style={{ color: "#c9202e", marginLeft: 20}}
+              >
+                <ClearIcon/>
+              </IconButton>
+              
       </ListItem>
+      
     );
   }
-  
 
 
 
@@ -105,18 +131,12 @@ export default function FriendRequestModal() {
           <div className={classes.paper}>
             <div> Pending Friend Requests</div>
 
-            <div className={classes.root}>
-                <FixedSizeList height={400} width={300} itemSize={60} itemCount={requested.length}>
+            <div >
+                <FixedSizeList height={400} width={320} itemSize={48} itemCount={requested.length }>
                     {renderRow}
                 </FixedSizeList>
             </div>
-            
-            <Button
-                variant='contained'
-                onClick={displayFriendRequest}
-            >
-                Send Friend Request
-            </Button>
+
         
           </div>
         </Fade>

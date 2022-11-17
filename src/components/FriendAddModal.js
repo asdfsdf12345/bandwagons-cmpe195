@@ -55,8 +55,7 @@ export default function FriendAddModal() {
         const result = await addDoc(collection(db, "FriendRequests"), {
           uEmail: user.email,
           uEmail2: requestEmail
-        },
-       {merge: true}
+        }
         );
         setAlert({
           open: true,

@@ -50,7 +50,9 @@ const FriendsPage = () => {
           />
         </ListItemButton>
       </List>
-      <div>
+      <div
+      position="fixed" 
+      style={{height: "100%" ,width: "100%"}}>
       <FriendAddModal></FriendAddModal>  
       <FriendRequestModal></FriendRequestModal>
       </div>

@@ -65,8 +65,7 @@ export default function FriendRequestModal() {
     //add friend
     try{
           const result = await addDoc(collection(db, "Friends"), {
-            uEmail: user.email,
-            uEmail2: requested[pos]
+            friends: [user.email, requested[pos]]
           }
           );
 

@@ -7,57 +7,55 @@ import List from "@material-ui/core/List";
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
-import { Button } from "@material-ui/core";
+import { AppBar, Button, makeStyles, Toolbar } from "@material-ui/core";
 import SpringModal from "../components/FriendAddModal";
 import TransitionsModal from "../components/FriendAddModal";
 import FriendAddModal from "../components/FriendAddModal";
 import FriendRequestModal from "../components/FriendRequestModal";
+import FriendList from "../components/FriendList";
 
 
 const FriendsPage = () => {
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  const useStyles = makeStyles((theme) => ({
+    appbar: {
+      top:'auto',
+      bottom: 0,
+      defaultStyles: "none"
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+  }));
   
-  const handleClick = () => {
-  };
-
-  const addFriend= () => {
-  };
+  const classes = useStyles();
 
   return (
-    <>
-      <div>FRIEND</div>
+    <div
+    
+    >
 
-      <List>
-        <ListItemButton onClick={handleClick}>
-          <Avatar alt="profile1" src="./photos/Profile1.jpg" style={{ height: '80px', width: '80px' }}></Avatar>
-          <ListItemText
-            primary="John Appleseed"
-            secondary={
-              <div>
-                <div>Go Spartans!!</div>
-                <div>California</div>
-              </div>
-            }
-          />
-        </ListItemButton>
-      </List>
-      <div
-      position="fixed" 
-      style={{height: "100%" ,width: "100%"}}>
-      <FriendAddModal></FriendAddModal>  
-      <FriendRequestModal></FriendRequestModal>
-      </div>
-        
-    </> 
+      <FriendList></FriendList>
+      
+     
+        <AppBar
+        color="transparent"
+          className={classes.appbar}
+        >
+          <div>
+          <FriendAddModal></FriendAddModal>  
+          <FriendRequestModal></FriendRequestModal>
+          </div>
+        </AppBar>
+          
+          
+     
+      
+      
+    </div> 
   )
 }
 

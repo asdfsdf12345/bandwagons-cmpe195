@@ -28,10 +28,11 @@ function App() {
     <div className={classes.App}>
       <Header/>
       <Route path='/' component={Homepage} exact/>
-      <Route path='/places/:id' component={PlacePage }/>
+      <Route path='/places/:pid' component={PlacePage }/>
       <Route path='/settings' component={SettingsPage }/>
       <Route path='/profile' component={ProfilePage }/>
-      <Route path='/friends' component={FriendsPage }/>
+      <Route path='/friends' component={FriendsPage } exact/>
+      <Route path='/friends/:fid' component={FriendsPage }/>
       <Route path='/events' component={EventsPage }/>
       <Route path='/groups' component={GroupsPage }/>
       <Route path='/finder' component={FinderPage }/>

@@ -8,7 +8,7 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import { NavigationState } from '../NavigationContext';
 import { useState } from 'react';
 import { async } from '@firebase/util';
-import { addDoc, collection, doc, getDocs, query, where, onSnapshot, deleteDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, getDoc, query, where, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { FixedSizeList } from 'react-window';
 import PropTypes from 'prop-types';
@@ -18,74 +18,166 @@ import { borderBottom } from '@mui/system';
 import { useEffect } from 'react';
 import '../App.css';
 
-
-
 export default function FriendList() {
 
-    const useStyles = makeStyles(() =>({
-    
-        bannerContent: {
-            height:1000,
-            display: "flex",
-            flexDirection: "column",
-        },
-    
-    }));
-   
-    const classes = useStyles();
-    const [open, setOpen] = useState(false);
-    const [requestEmail, setRequestEmail] = useState("");
-    const {setAlert, user} = NavigationState();
-    const [friends, setfriends] = useState([]);
+const [names, setNames] = useState([]);
+const [bios, setBios] = useState([]);
+const {setAlert, user, friends, setFriends,} = NavigationState();
 
-    useEffect(() => {
+class Friend {
+    constructor (firstName, lastName, bio ) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bio = bio;
+    }
 
-        findFriendRequest();
-      }, []);
+    toString() {
+        return this.firstName + ', ' + this.lastName + ', ' + this.bio;
+    }
+
+    getName(){
+        return this.firstName + ' ' + this.lastName;
+    }
+
+    getBio(){
+        return this.bio;
+    }
     
-    //display requests
-    const findFriendRequest = async () => {
-        try{
-        console.log("hello")
-        console.log(user)
-        const friendRef = collection(db, "Friends");
-        const q = query(friendRef, where("friends", 'array-contains-any', [user.email]));
-        const querySnapshot = onSnapshot(q, (querySnapshot) => {
+}
+
+class FriendList {
+    constructor () {
+        this.friendList = [];
+    }
+    
+    addFriend(friend) {
+        this.friendList.push(friend);
+    }
+
+    getList () {
+        return this.friendList;
+    }
+    getNames () {
+        return this.friendNames;
+    }
+    getBios () {
+        return this.friendBios;
+    }
+}
+
+const friendList = new FriendList();
+
+// Firestore data converter
+const friendConverter = {
+    toFirestore: (friend) => {
+        return {
+            name: friend.firstName,
+            state: friend.lastName,
+            country: friend.bio
+            };
+    },
+    fromFirestore: (snapshot, options) => {
+        const data = snapshot.data(options);
+        return new Friend(data.firstName, data.lastName, data.bio);
+    }
+};
+
+useEffect(() => {
+    displayFriends();
+  }, []);
+
+const getNames = async () => {
+    try{
+        console.log("hello");
         const results = [];
-        querySnapshot.forEach((doc) => {
-        results.push(doc.data().friends[1]);
-        console.log("hello")
-        console.log(friends);
+        for (let i = 0; i < friends.length; i++) {
+            //getFriend(friends[i]);
+            const friend = await getFriend(friends[i]);
+            results.push(friend.getName());
+          }
+          console.log(results);
+          return results;
+
+  }catch (error) {
+    setAlert({
+      open: true,
+      message: error.message,
+      type: 'error',
     });
-    setfriends(results);
-});
+  }
 
-      }catch (error) {
-        setAlert({
-          open: true,
-          message: error.message,
-          type: 'error',
-        });
-      }
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    
-  };
-
-  // each item in the list 
-  function renderRow(props) {
-    const { index, style } = props;
   
+};
+
+const getBios = async () => {
+    try{
+        console.log("hello");
+        const results = [];
+        for (let i = 0; i < friends.length; i++) {
+            //getFriend(friends[i]);
+            const friend = await getFriend(friends[i]);
+            results.push(friend.getBio());
+          }
+          console.log(results);
+          return results;
+
+  }catch (error) {
+    setAlert({
+      open: true,
+      message: error.message,
+      type: 'error',
+    });
+  }
+
+  
+};
+
+const displayFriends = async () => {
+    await getNames().then((response) =>{
+        console.log(response);
+        setNames(response);
+        console.log(names);
+    }) 
+
+    await getBios().then((response) =>{
+        console.log(response);
+        setBios(response);
+        console.log(bios);
+    }) 
+}
+
+const getFriend = async (email) => {
+try{
+console.log(email);
+const docRef = doc(db, "Users", email).withConverter(friendConverter);
+const docSnap = await getDoc(docRef);
+if (docSnap.exists()) {
+    const friend = docSnap.data(); 
+    friendList.addFriend(friend);
+    return friend;
+    } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+    }
+
+}catch (error) {
+setAlert({
+    open: true,
+    message: error.message,
+    type: 'error',
+});
+}
+};
+
+function renderRow(props) {
+    const { index, style } = props;
+
     return (
         
       <ListItem style={style} key={index}>
-        <ListItemText primary={`${friends[index]}`} />
+        <ListItemText primary={`${names[index]}`} />
+        <ListItemText secondary={`${bios[index]}`} />
+        
             
               
               
@@ -95,8 +187,7 @@ export default function FriendList() {
   }
 
 
-
-  return (
+return (
     
     <div
        style={{height: '95vh'}}
@@ -104,7 +195,7 @@ export default function FriendList() {
     >
         <AutoSizer>
         {({height, width}) => (
-            <FixedSizeList height={height} width={width} itemSize={100} itemCount={friends.length}>
+            <FixedSizeList height={height} width={width} itemSize={100} itemCount={names.length}>
             {renderRow}
         </FixedSizeList>
         )}
@@ -113,6 +204,6 @@ export default function FriendList() {
     </div>        
 
         
-   
   );
+
 }

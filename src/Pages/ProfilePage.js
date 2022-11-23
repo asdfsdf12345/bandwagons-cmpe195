@@ -93,25 +93,31 @@ const ProfilePage = () => {
     if(formats.length <4 || formats.length >4) {
       setAlert({
         open: true,
-        message:`please have at least 3 main hobbies selected: ${formats.length}`,
+        message:`please select 3 main hobbies: ${formats.length -1}`,
         type: 'error',
       });
       return;
     }
     
     try{
-      const result = await setDoc(doc(db, "Friends", user.email ), {
+      const result = await setDoc(doc(db, "Users", user.uid), {
         firstName: firstName ,
         lastName: lastName,
         bio: bio,
         uid: user.uid,
+        email: user.email,
         tag1: formats[1],
         tag2: formats[2],
         tag3: formats[3],
       },
      {merge: true}
       );
-      
+
+      setAlert({
+        open: true,
+        message: "You have successfully updated your profile",
+        type: 'success',
+      });
           
     }catch (error) {
       setAlert({

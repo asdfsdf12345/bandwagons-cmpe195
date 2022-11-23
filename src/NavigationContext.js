@@ -7,11 +7,13 @@ const Navigation = createContext();
 const NavigationContext = ({ children }) => {
 
   const[user, setUser] = useState(null);
+  const[friends, setFriends] = useState([]);
   const[alert, setAlert] = useState({
     open:false,
     message:'',
     type: " success"
   })
+
 
   useEffect(() => {
 
@@ -28,6 +30,8 @@ const NavigationContext = ({ children }) => {
         alert,
         setAlert,
         user,
+        friends,
+        setFriends,
         
       }}
     >

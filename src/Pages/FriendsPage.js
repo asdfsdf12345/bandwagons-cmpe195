@@ -12,6 +12,7 @@ import SpringModal from "../components/FriendAddModal";
 import TransitionsModal from "../components/FriendAddModal";
 import FriendAddModal from "../components/FriendAddModal";
 import FriendRequestModal from "../components/FriendRequestModal";
+import FriendFind from "../components/FriendFind";
 import FriendList from "../components/FriendList";
 
 
@@ -38,8 +39,8 @@ const FriendsPage = () => {
     
     >
 
+      <FriendFind></FriendFind>
       <FriendList></FriendList>
-      
      
         <AppBar
         color="transparent"

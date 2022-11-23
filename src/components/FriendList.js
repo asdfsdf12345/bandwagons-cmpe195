@@ -20,9 +20,12 @@ import '../App.css';
 
 export default function FriendList() {
 
+//state variables
 const [names, setNames] = useState([]);
 const [bios, setBios] = useState([]);
 const {setAlert, user, friends, setFriends,} = NavigationState();
+
+//friend class 
 
 class Friend {
     constructor (firstName, lastName, bio ) {
@@ -45,29 +48,8 @@ class Friend {
     
 }
 
-class FriendList {
-    constructor () {
-        this.friendList = [];
-    }
-    
-    addFriend(friend) {
-        this.friendList.push(friend);
-    }
-
-    getList () {
-        return this.friendList;
-    }
-    getNames () {
-        return this.friendNames;
-    }
-    getBios () {
-        return this.friendBios;
-    }
-}
-
-const friendList = new FriendList();
-
 // Firestore data converter
+
 const friendConverter = {
     toFirestore: (friend) => {
         return {
@@ -85,6 +67,8 @@ const friendConverter = {
 useEffect(() => {
     displayFriends();
   }, []);
+
+//get names
 
 const getNames = async () => {
     try{
@@ -109,6 +93,8 @@ const getNames = async () => {
   
 };
 
+//get Bios
+
 const getBios = async () => {
     try{
         console.log("hello");
@@ -132,6 +118,8 @@ const getBios = async () => {
   
 };
 
+//get both and set state variables
+
 const displayFriends = async () => {
     await getNames().then((response) =>{
         console.log(response);
@@ -146,6 +134,8 @@ const displayFriends = async () => {
     }) 
 }
 
+//get data as friend class from db
+
 const getFriend = async (email) => {
 try{
 console.log(email);
@@ -153,7 +143,6 @@ const docRef = doc(db, "Users", email).withConverter(friendConverter);
 const docSnap = await getDoc(docRef);
 if (docSnap.exists()) {
     const friend = docSnap.data(); 
-    friendList.addFriend(friend);
     return friend;
     } else {
     // doc.data() will be undefined in this case
@@ -169,6 +158,7 @@ setAlert({
 }
 };
 
+//render row function for window list. USE THIS TO STYLE LIST ITEMS.
 function renderRow(props) {
     const { index, style } = props;
 

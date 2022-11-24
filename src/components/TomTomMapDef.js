@@ -1,12 +1,12 @@
 import React, { Component, createRef } from "react";
 import { useState, useEffect } from "react";
-import { makeStyles, Container } from "@material-ui/core";
+import { makeStyles, Container, TextField } from "@material-ui/core";
 import tt from "@tomtom-international/web-sdk-maps";
 import { services } from "@tomtom-international/web-sdk-services";
 import axios from "axios";
 import Button from '@mui/material/Button';
 
-export default function TomTomMapDef() {
+const TomTomMapDef = () => {
   const [location, setLocation] = useState(null);
 
   useEffect(() => {
@@ -96,18 +96,17 @@ export default function TomTomMapDef() {
   };
 
   return (
-    // <View style={styles.container}>
-    //   <View style={styles.buttons}>
-    //     <TextInput
-    //       style={styles.textInput}
-    //       onChangeText={setMapCenter}
-    //       value={mapCenter}
-    //     ></TextInput>
-    //     <Button title="Set Center" onPress={onButtonClick}></Button>
-    //   </View>
-
+    <>
+    <div><TextField
+          label = "Text"
+        //   style={styles.textInput}
+        //   onChangeText={setMapCenter}
+        //   value={mapCenter}
+        />
+    </div>
+    <div><Button title="Set Center" onPress={onButtonClick}></Button></div>
     <div><Button title="Set Center" onPress={onButtonClick}>Set Center</Button></div>
-
+    </>
       /* <Suggestions
         placeholder={placeholder}
         showList={showList}
@@ -157,3 +156,5 @@ const useStyles = makeStyles({
     justifyContent: "center",
   },
 });
+
+export default TomTomMapDef;

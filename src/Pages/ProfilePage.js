@@ -78,8 +78,8 @@ const ProfilePage = () => {
   };
 
   const classes = useStyles();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName ]= useState("");
+  const [name, setName] = useState("");
+  // const [lastName, setLastName ]= useState("");
   const [bio, setBio ]= useState("");
   const [state, setState] = useState('');
 
@@ -101,8 +101,9 @@ const ProfilePage = () => {
     
     try{
       const result = await setDoc(doc(db, "Users", user.uid), {
-        firstName: firstName ,
-        lastName: lastName,
+        name: name ,
+        // firstName: firstName,
+        // lastName: lastName,
         bio: bio,
         uid: user.uid,
         email: user.email,
@@ -142,10 +143,11 @@ const ProfilePage = () => {
   */}
       <Box
       className= {classes.outer}
+      
   
   
   >
-      <Box
+      {/* <Box
       component="form"
       noValidate
       autoComplete="off"
@@ -185,9 +187,84 @@ const ProfilePage = () => {
           </MenuItem>
         ))}
       </TextField>
-    </Box>
+    </Box> */}
       
-    <TextField
+      <Box
+      component = "form"
+      display = "flex"
+      flexDirection = "column"
+      alignItems = "center"
+      sx={{
+        '& > :not(style)': { m: 1, width: '50ch' },       
+      }}
+      noValidate
+      autoComplete="off"
+    >
+      <div>
+      <TextField
+        id="standard-name-input"
+        label="Name"
+        type="name"
+        variant="outlined"
+        fullWidth
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+
+      {/* <TextField
+        id="standard-last-name-input"
+        label="Last Name"
+        type="lastName"
+        variant="outlined"
+        fullWidth
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+      /> */}
+      </div>
+
+      <div>
+      <TextField
+        id="standard-bio-input"
+        label="Bio"
+        type="bio"
+        multiline
+        rows={4}
+        fullWidth
+        variant="outlined"
+        size="normal"
+        value={bio}
+        onChange={(e) => setBio(e.target.value)}
+      />
+      </div>
+
+      <div>
+      <TextField
+        id="standard-states-select"
+        select
+        label="State"
+        value={state}
+        onChange={handleStateChange}
+        helperText="Please select your state"
+        fullWidth
+        variant="outlined"
+        size="small"
+      >
+        {states.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.value}
+          </MenuItem>
+        ))}
+      </TextField>
+      </div>
+        
+    <div>
+      <br></br>
+      <br></br>
+    </div>
+
+    </Box>
+
+    {/* <TextField
         id="standard-bio-input"
         label="Bio"
         className={classes.bio}
@@ -196,8 +273,12 @@ const ProfilePage = () => {
         variant= "outlined"
         value={bio}
         onChange={(e) => setBio(e.target.value)}
-        />
+        /> */}
     
+    {/* <div><Box sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16}}>Avatar</Box></div>
+    <div><AvatarUpload></AvatarUpload></div>
+
+    <div><br></br></div> */}
 
     <div>
         <ToggleButtonGroup

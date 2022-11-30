@@ -12,18 +12,18 @@ import { addDoc, collection, doc, getDocs, getDoc, query, where, onSnapshot, del
 import { db } from '../firebase';
 import { FixedSizeList } from 'react-window';
 import PropTypes from 'prop-types';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import ClearIcon from '@material-ui/icons/Clear';
 import { borderBottom } from '@mui/system';
 import { useEffect } from 'react';
 import '../App.css';
 
-export default function FriendList() {
+export default function FriendListMini() {
 
 //state variables
 const [names, setNames] = useState([]);
 const [bios, setBios] = useState([]);
-const {setAlert, user, friends, setFriends,} = NavigationState();
+const {setAlert, user, friends, groupRequests, setGroupRequests} = NavigationState();
 
 //friend class 
 
@@ -93,44 +93,12 @@ const getNames = async () => {
   
 };
 
-//get Bios
-
-const getBios = async () => {
-    try{
-        console.log("hello");
-        const results = [];
-        for (let i = 0; i < friends.length; i++) {
-            //getFriend(friends[i]);
-            const friend = await getFriend(friends[i]);
-            results.push(friend.getBio());
-          }
-          console.log(results);
-          return results;
-
-  }catch (error) {
-    setAlert({
-      open: true,
-      message: error.message,
-      type: 'error',
-    });
-  }
-
-  
-};
-
 //get both and set state variables
 
 const displayFriends = async () => {
     await getNames().then((response) =>{
-        console.log(response);
         setNames(response);
         console.log(names);
-    }) 
-
-    await getBios().then((response) =>{
-        console.log(response);
-        setBios(response);
-        console.log(bios);
     }) 
 }
 
@@ -158,21 +126,61 @@ setAlert({
 }
 };
 
+const setRequests = async (index) => {
+  getRequests(index).then((response) =>{
+    console.log(response);
+    setGroupRequests(response);
+    console.log(groupRequests);
+  })
+}
+
+
+const getRequests = async (index) => {
+  console.log(index);
+  
+  const checked = [... groupRequests];
+  for(let i in checked){
+    if(friends[index] === checked[i]){
+      setAlert({
+        open: true,
+        message: "You have already added them to the request list",
+        type: 'error',
+    });
+    return checked
+    }
+  }
+  checked.push(friends[index]);
+  setAlert({
+    open: true,
+    message: `${friends[index]} is now on the group request list`,
+    type: 'success',
+});
+  console.log(checked);
+  
+  return checked
+  
+}
+
 //render row function for window list. USE THIS TO STYLE LIST ITEMS.
 
 function renderRow(props) {
     const { index, style } = props;
 
     return (
-        
+      
       <ListItem divider style={style} key={index}>
         <ListItemText primary={`${names[index]}`} />
-        <ListItemText secondary={`${bios[index]}`} />
-        
+        <IconButton edge="end" 
+              style={{ color: "#2ab530"}}
+              onClick={() => setRequests(index)}
+              >
+                <AddCircleIcon />
+        </IconButton>
             
               
               
       </ListItem>
+      
     );
   }
 
@@ -180,13 +188,12 @@ function renderRow(props) {
 return (
     
     <div
-       style={{height: '95vh'}}
+       style={{height: '50vh'}}
        
     >
         <AutoSizer>
         {({height, width}) => (
-            <FixedSizeList height={height} width={width} itemSize={100} itemCount={names.length} style={{borderLeftStyle:"solid", borderColor: '#fccb00',
-            borderWidth: 2,}}>
+            <FixedSizeList height={height} width={width} itemSize={100} itemCount={names.length} style={{borderStyle:"solid", borderWidth:2, marginTop:10, marginBottom:10}}>
             {renderRow}
         </FixedSizeList>
         )}

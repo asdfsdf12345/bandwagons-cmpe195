@@ -109,6 +109,7 @@ const ProfilePage = () => {
         tag1: formats[1],
         tag2: formats[2],
         tag3: formats[3],
+        state: state,
       },
      {merge: true}
       );

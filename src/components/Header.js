@@ -112,6 +112,12 @@ const Header = () => {
                     </MenuItem>
                     <MenuItem
                         onClick={handleClose}
+                        id = 'Groups'
+                    >
+                    <Link to="/groups" className= {classes.link}>Groups </Link> 
+                    </MenuItem>
+                    <MenuItem
+                        onClick={handleClose}
                         id = 'Settings'
                     >
                     <Link to="/settings" className= {classes.link}>Settings </Link> 

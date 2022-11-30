@@ -17,67 +17,75 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { borderBottom } from '@mui/system';
 import { useEffect } from 'react';
 import '../App.css';
+import { useHistory } from 'react-router-dom';
 
-export default function FriendList() {
+export default function GroupList() {
 
 //state variables
 const [names, setNames] = useState([]);
-const [bios, setBios] = useState([]);
-const {setAlert, user, friends, setFriends,} = NavigationState();
-
+const [groupDescriptions, setGroupDescriptions] = useState([]);
+const {setAlert, user, friends, groups} = NavigationState();
+const history = useHistory();
 //friend class 
 
-class Friend {
-    constructor (firstName, lastName, bio ) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.bio = bio;
+class Group {
+    constructor (groupName, groupDescription, creatorID, members ) {
+        this.groupName = groupName;
+        this.groupDescription = groupDescription;
+        this.creatorID = creatorID;
+        this.members = members;
     }
 
     toString() {
-        return this.firstName + ', ' + this.lastName + ', ' + this.bio;
+        return this.groupName + ', ' + this.groupDescription + ', ' + this.creatorID;
     }
 
     getName(){
-        return this.firstName + ' ' + this.lastName;
+        return this.groupName;
     }
 
-    getBio(){
-        return this.bio;
+    getGroupDescription(){
+        return this.groupDescription;
     }
-    
+
+    getMemberNumber(){
+        return this.members.length;
+    }
+
 }
 
 // Firestore data converter
 
-const friendConverter = {
-    toFirestore: (friend) => {
+const groupConverter = {
+    toFirestore: (group) => {
         return {
-            name: friend.firstName,
-            state: friend.lastName,
-            country: friend.bio
+            name: group.groupName,
+            state: group.groupDescription,
+            country: group.creatorID,
+            members: group.members,
             };
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options);
-        return new Friend(data.firstName, data.lastName, data.bio);
+        return new Group(data.groupName, data.groupDescription, data.creatorID, data.members);
     }
 };
 
 useEffect(() => {
-    displayFriends();
+    displayGroups();
   }, []);
 
 //get names
 
+
 const getNames = async () => {
     try{
-        console.log("hello");
+        
         const results = [];
-        for (let i = 0; i < friends.length; i++) {
+        for (let i = 0; i < groups.length; i++) {
             //getFriend(friends[i]);
-            const friend = await getFriend(friends[i]);
-            results.push(friend.getName());
+            const group = await getGroup(groups[i]);
+            results.push(group.getName());
           }
           console.log(results);
           return results;
@@ -93,16 +101,16 @@ const getNames = async () => {
   
 };
 
-//get Bios
+//get groupDescriptions
 
-const getBios = async () => {
+const getGroupDescriptions = async () => {
     try{
-        console.log("hello");
+        
         const results = [];
-        for (let i = 0; i < friends.length; i++) {
+        for (let i = 0; i < groups.length; i++) {
             //getFriend(friends[i]);
-            const friend = await getFriend(friends[i]);
-            results.push(friend.getBio());
+            const group = await getGroup(groups[i]);
+            results.push(group.getGroupDescription());
           }
           console.log(results);
           return results;
@@ -120,30 +128,32 @@ const getBios = async () => {
 
 //get both and set state variables
 
-const displayFriends = async () => {
+const displayGroups = async () => {
+    
     await getNames().then((response) =>{
         console.log(response);
         setNames(response);
         console.log(names);
     }) 
-
-    await getBios().then((response) =>{
+    
+    await getGroupDescriptions().then((response) =>{
         console.log(response);
-        setBios(response);
-        console.log(bios);
+        setGroupDescriptions(response);
+        console.log(groupDescriptions);
     }) 
+    
 }
 
 //get data as friend class from db
 
-const getFriend = async (email) => {
+const getGroup = async (name) => {
 try{
-console.log(email);
-const docRef = doc(db, "Users", email).withConverter(friendConverter);
+console.log(name);
+const docRef = doc(db, "Groups", name).withConverter(groupConverter);
 const docSnap = await getDoc(docRef);
 if (docSnap.exists()) {
-    const friend = docSnap.data(); 
-    return friend;
+    const group = docSnap.data(); 
+    return group;
     } else {
     // doc.data() will be undefined in this case
     console.log("No such document!");
@@ -165,9 +175,9 @@ function renderRow(props) {
 
     return (
         
-      <ListItem divider style={style} key={index}>
+      <ListItem button onClick={() => history.push(`/groups/${names[index]}`)} divider style={style} key={index}>
         <ListItemText primary={`${names[index]}`} />
-        <ListItemText secondary={`${bios[index]}`} />
+        <ListItemText secondary={`${groupDescriptions[index]}`} />
         
             
               

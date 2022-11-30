@@ -11,6 +11,8 @@ import GroupsPage from './Pages/GroupsPage';
 import FinderPage from './Pages/FinderPage';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from './components/Alert';
+import GroupMessagePage from './Pages/GroupMessagePage';
+import FriendMessagePage from './Pages/FriendMessagePage';
 
 function App() {
 
@@ -32,11 +34,11 @@ function App() {
       <Route path='/settings' component={SettingsPage }/>
       <Route path='/profile' component={ProfilePage }/>
       <Route path='/friends' component={FriendsPage } exact/>
-      <Route path='/friends/:fid' component={FriendsPage }/>
+      <Route path='/friends/:fid' component={FriendMessagePage}/>
       <Route path='/events' component={EventsPage }/>
-      <Route path='/groups' component={GroupsPage }/>
+      <Route path='/groups' component={GroupsPage } exact/>
       <Route path='/finder' component={FinderPage }/>
-      <Route path='/groups' component={GroupsPage} />
+      <Route path='/groups/:gid' component={GroupMessagePage} />
     </div>
     <Alert/>
     </BrowserRouter>

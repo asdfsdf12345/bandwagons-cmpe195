@@ -22,7 +22,7 @@ const FriendsPage = () => {
     appbar: {
       top:'auto',
       bottom: 0,
-      defaultStyles: "none"
+      defaultStyles: "none",
     },
     paper: {
       backgroundColor: theme.palette.background.paper,

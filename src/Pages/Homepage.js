@@ -9,6 +9,7 @@ const Homepage = () => {
 
   if (user) {
     return <div><Post/></div> 
+    console.log(user)
   } else {
     return <div><Banner/></div>
   }

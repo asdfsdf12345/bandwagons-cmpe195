@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { createRef, useState } from "react";
+import { NavigationState } from "../NavigationContext";
+import { doc, setDoc, collection, Timestamp, addDoc } from "firebase/firestore";
+import { db } from "../firebase";
 // , profilePic, image, username, timestamp, message
 
 import { Avatar, makeStyles } from "@material-ui/core"
@@ -7,7 +10,7 @@ import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import NearMeIcon from "@material-ui/icons/NearMe";
 import { ExpandMoreOutlined, Navigation } from "@material-ui/icons";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import { NavigationState } from "../NavigationContext";
+
 
 const useStyles = makeStyles((theme) => ({
     post: {
@@ -87,12 +90,53 @@ const useStyles = makeStyles((theme) => ({
     }, 
 }));
 
-const Post = ({ profilePic, image, username, timestamp, message }) => {
+const Post =   ({ profilePic, username,timestamp,message,image }) => {
 
   const {user, setAlert} = NavigationState();
   const classes = useStyles();
 
-    console.log(user)
+  const {content, setContent} = useState("");
+  const {like, setLike} = useState("");
+  const {time, setTime} = useState("");
+
+
+  const handlePostSubmit = async () => {
+    if(content.trim().length === 0) {
+      setAlert({
+        open: true,
+        message:`Your post is empty!`,
+        type: 'error',
+      });
+      return;
+    }
+    
+    try {
+        const postRef = collection(db, "Posts");
+        const postResult = {
+            stringExample: "Hello world!",
+            booleanExample: true,
+            numberExample: 3.14159265,
+            dateExample: Timestamp.fromDate(new Date("December 10, 1815")),
+            arrayExample: [5, true, "hello"],
+            nullExample: null,
+            objectExample: {
+                a: 5,
+                b: {
+                    nested: "foo"
+                }
+            }
+        };
+        await addDoc(postRef, postResult, {merge: true});
+        
+    } catch (error) {
+        setAlert({
+        open: true,
+        message: error.message,
+        type: 'error',
+        });
+    }
+  };
+
     return (
     <div className= {classes.post}>
         
@@ -122,16 +166,6 @@ const Post = ({ profilePic, image, username, timestamp, message }) => {
                 <ChatBubbleOutlineIcon />
                 <p>Comment</p>
             </div>
-
-            {/* <div className= {classes.post__option}>
-                <NearMeIcon />
-                <p>Share</p>
-            </div>
-
-            <div className= {classes.post__option}>
-                <AccountCircleIcon />
-                <ExpandMoreOutlined />
-            </div> */}
 
         </div>
     </div>

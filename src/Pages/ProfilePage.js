@@ -78,14 +78,14 @@ const ProfilePage = () => {
   };
 
   const classes = useStyles();
-  const [name, setName] = useState("");
-  // const [lastName, setLastName ]= useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName ]= useState("");
   const [bio, setBio ]= useState("");
-  const [state, setState] = useState('');
+  // const [state, setState] = useState('');
 
-  const handleStateChange = (event) => {
-    setState(event.target.value);
-  };
+  // const handleStateChange = (event) => {
+  //   setState(event.target.value);
+  // };
 
   const {setAlert, user} = NavigationState();
 
@@ -101,9 +101,9 @@ const ProfilePage = () => {
     
     try{
       const result = await setDoc(doc(db, "Users", user.uid), {
-        name: name ,
-        // firstName: firstName,
-        // lastName: lastName,
+        // name: name ,
+        firstName: firstName,
+        lastName: lastName,
         bio: bio,
         uid: user.uid,
         email: user.email,
@@ -202,16 +202,16 @@ const ProfilePage = () => {
     >
       <div>
       <TextField
-        id="standard-name-input"
-        label="Name"
-        type="name"
+        id="standard-first-name-input"
+        label="First Name"
+        type="firstName"
         variant="outlined"
         fullWidth
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
       />
 
-      {/* <TextField
+      <TextField
         id="standard-last-name-input"
         label="Last Name"
         type="lastName"
@@ -219,7 +219,7 @@ const ProfilePage = () => {
         fullWidth
         value={lastName}
         onChange={(e) => setLastName(e.target.value)}
-      /> */}
+      />
       </div>
 
       <div>
@@ -237,7 +237,7 @@ const ProfilePage = () => {
       />
       </div>
 
-      <div>
+      {/* <div>
       <TextField
         id="standard-states-select"
         select
@@ -255,7 +255,7 @@ const ProfilePage = () => {
           </MenuItem>
         ))}
       </TextField>
-      </div>
+      </div> */}
         
     <div>
       <br></br>

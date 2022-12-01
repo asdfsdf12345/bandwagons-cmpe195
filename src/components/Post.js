@@ -9,6 +9,13 @@ import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import { FirebaseError } from "firebase/app";
 
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 import { Divider, Grid, Paper } from "@material-ui/core";
 const imgLink =
   "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
@@ -110,7 +117,6 @@ const Post =   ({ profilePic, username,timestamp,message,image }) => {
   const currentTime = new Date()
   const {time, setTime} = useState("");
 
-
   const handlePostSubmit = async () => {
     if(content.trim().length === 0) {
       setAlert({
@@ -141,8 +147,29 @@ const Post =   ({ profilePic, username,timestamp,message,image }) => {
     }
   };
 
+  const [commentOpen, setCommentOpen] = React.useState(false);
+  const [scroll, setScroll] = React.useState('paper');
+  const handleCommentOpen = () => () => {
+      setCommentOpen(true);
+  };
+  
+  const handleCommentClose = () => {
+      setCommentOpen(false);
+  };
+  const descriptionElementRefComment = React.useRef(null);
+  
+  React.useEffect(() => {
+  if (commentOpen) {
+      const { current: descriptionElement } = descriptionElementRefComment;
+      if (descriptionElement !== null) {
+      descriptionElement.focus();
+      }
+  }
+  }, [commentOpen]);
+
     return (
     <>
+    {/* POST BOX SECTION*/}
     <Paper className={classes.paper}>
     <Grid container wrap="nowrap" spacing={2} gridColumn="span 4">
         <Grid item>
@@ -164,8 +191,10 @@ const Post =   ({ profilePic, username,timestamp,message,image }) => {
             </div>
 
             <div className= {classes.post__option}>
-                <ChatBubbleOutlineIcon />
-                <p>Comment</p>
+                <ChatBubbleOutlineIcon
+                    onClick={handleCommentOpen('paper')}
+                />
+                <p onClick={handleCommentOpen('paper')}>Comment</p>
             </div>
 
         </div>
@@ -204,6 +233,39 @@ const Post =   ({ profilePic, username,timestamp,message,image }) => {
 
         </div> */}
     </div>
+
+    {/* COMMENT SECTION*/}
+    <div>
+        <Dialog
+          open={commentOpen}
+          onClose={handleCommentClose}
+          scroll={"paper"}
+          aria-labelledby="scroll-dialog-title"
+          aria-describedby="scroll-dialog-description"
+        >
+        <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
+        <DialogContent dividers={scroll === 'paper'}>
+            <DialogContentText
+              id="scroll-dialog-description"
+              ref={descriptionElementRefComment}
+              tabIndex={-1}
+            >
+            {[...new Array(50)]
+              .map(
+                () => `Cras mattis consectetur purus sit amet fermentum.
+    Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+    Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+    Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
+                  )
+                  .join('\n')}
+              </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCommentClose}>Cancel</Button>
+          <Button onClick={handleCommentClose}>Subscribe</Button>
+        </DialogActions>
+      </Dialog>
+        </div>
     </>
     ) 
 }

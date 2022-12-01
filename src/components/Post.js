@@ -1,15 +1,17 @@
 import React, { createRef, useState } from "react";
 import { NavigationState } from "../NavigationContext";
-import { doc, setDoc, collection, Timestamp, addDoc } from "firebase/firestore";
+import { doc, setDoc, collection, Timestamp, addDoc, Firestore } from "firebase/firestore";
 import { db } from "../firebase";
 // , profilePic, image, username, timestamp, message
 
 import { Avatar, makeStyles } from "@material-ui/core"
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
-import NearMeIcon from "@material-ui/icons/NearMe";
-import { ExpandMoreOutlined, Navigation } from "@material-ui/icons";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { FirebaseError } from "firebase/app";
+
+import { Divider, Grid, Paper } from "@material-ui/core";
+const imgLink =
+  "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -66,6 +68,8 @@ const useStyles = makeStyles((theme) => ({
         color: "gray",
         cursor: "pointer",
         padding: "15px",
+        alignItems: "center",
+        justifyContent: "center",
     },
 
     post__option: {
@@ -88,6 +92,12 @@ const useStyles = makeStyles((theme) => ({
             borderRadius: "10px"
         },
     }, 
+
+    paper: {
+        maxWidth: 400,
+        margin: `${theme.spacing(1)}px auto`,
+        padding: theme.spacing(2),
+    },
 }));
 
 const Post =   ({ profilePic, username,timestamp,message,image }) => {
@@ -97,6 +107,7 @@ const Post =   ({ profilePic, username,timestamp,message,image }) => {
 
   const {content, setContent} = useState("");
   const {like, setLike} = useState("");
+  const currentTime = new Date()
   const {time, setTime} = useState("");
 
 
@@ -113,49 +124,39 @@ const Post =   ({ profilePic, username,timestamp,message,image }) => {
     try {
         const postRef = collection(db, "Posts");
         const postResult = {
-            stringExample: "Hello world!",
-            booleanExample: true,
-            numberExample: 3.14159265,
-            dateExample: Timestamp.fromDate(new Date("December 10, 1815")),
-            arrayExample: [5, true, "hello"],
-            nullExample: null,
-            objectExample: {
-                a: 5,
-                b: {
-                    nested: "foo"
-                }
-            }
+            comment: null,
+            content: "I love guitars",
+            creatorEmail: "abc@def.com", 
+            like: false,
+            time: "November 30, 2022 at 9:32:20 AM UTC-8",
         };
         await addDoc(postRef, postResult, {merge: true});
         
     } catch (error) {
         setAlert({
-        open: true,
-        message: error.message,
-        type: 'error',
+            open: true,
+            message: error.message,
+            type: 'error',
         });
     }
   };
 
     return (
-    <div className= {classes.post}>
+    <>
+    <Paper className={classes.paper}>
+    <Grid container wrap="nowrap" spacing={2} gridColumn="span 4">
+        <Grid item>
+        <Avatar alt="Remy Sharp" src={imgLink} />
+        </Grid>
         
-        <div className= {classes.post_top}>
-            <Avatar src={profilePic} className= {classes.post__avatar} />
-            <div className= {classes.post__topInfo}>
-                <h3>{username}</h3>
-                <p>{new Date(timestamp?.toDate()).toUTCString()}</p>
-            </div>
-        </div>
-
-        <div className= {classes.post__bottom}>
-            <p>{message}</p>
-        </div>
-
-        <div className= {classes.post__image}>
-            <img src={image} alt="post" />
-        </div>
-
+        <Grid justifyContent="left" item xs zeroMinWidth>
+        <h4 style={{ margin: 0, textAlign: "left" }}>Michel Michel</h4>
+        <p style={{ textAlign: "left" }}>
+            super dope{" "}
+        </p>
+        <p style={{ textAlign: "left", color: "gray" }}>
+            posted 1 minute ago
+        </p>
         <div className= {classes.post__options}>
             <div className= {classes.post__option}>
                 <ThumbUpIcon />
@@ -168,7 +169,42 @@ const Post =   ({ profilePic, username,timestamp,message,image }) => {
             </div>
 
         </div>
+        </Grid>
+    </Grid>
+    </Paper>
+
+    <Divider variant="fullWidth" style={{ margin: "30px 0" }} />
+    <div className= {classes.post}>
+        {/* <div className= {classes.post_top}>
+            <Avatar src={profilePic} className= {classes.post__avatar} />
+            <div className= {classes.post__topInfo}>
+                <h3>{username}</h3>
+                <p>{"Date is " + currentTime.getDate() + ", Month is " + currentTime.getMonth()}</p>
+            </div>
+        </div>
+
+        <div className= {classes.post__bottom}>
+            <p>{message}</p>
+        </div>
+
+        <div className= {classes.post__image}>
+            <img src={image} alt="post" />
+        </div> */}
+
+        {/* <div className= {classes.post__options}>
+            <div className= {classes.post__option}>
+                <ThumbUpIcon />
+                <p>Like</p>
+            </div>
+
+            <div className= {classes.post__option}>
+                <ChatBubbleOutlineIcon />
+                <p>Comment</p>
+            </div>
+
+        </div> */}
     </div>
+    </>
     ) 
 }
 

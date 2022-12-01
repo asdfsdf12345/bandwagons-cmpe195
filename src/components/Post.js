@@ -21,6 +21,150 @@ const imgLink =
   "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
 
 
+const Post =  ({ profilePic, username,timestamp,message,image }) => {
+    
+{/* POST BOX SECTION*/}
+  const {user, setAlert} = NavigationState();
+  const classes = useStyles();
+
+  const {postID, setPostID} = useState("");
+  const {content, setContent} = useState("");
+  const {like, setLike} = useState("");
+  const {time, setTime} = useState("");
+  const currentTime = new Date();
+{/* POST BOX SECTION*/}
+
+
+const [scroll, setScroll] = React.useState('paper');
+
+
+{/* COMMENT SECTION*/}
+  const [commentOpen, setCommentOpen] = React.useState(false);
+  const handleCommentOpen = () => () => {
+      setCommentOpen(true);
+  };
+  
+  const handleCommentClose = () => {
+      setCommentOpen(false);
+  };
+  const descriptionElementRefComment = React.useRef(null);
+  
+  React.useEffect(() => {
+  if (commentOpen) {
+      const { current: descriptionElement } = descriptionElementRefComment;
+      if (descriptionElement !== null) {
+      descriptionElement.focus();
+      }
+  }
+  }, [commentOpen]);
+{/* COMMENT SECTION*/}
+
+    return (
+    <>
+    {/* POST BOX SECTION*/}
+    <Paper className={classes.paper}>
+    <Grid container wrap="nowrap" spacing={2} gridColumn="span 4">
+        <Grid item>
+        <Avatar alt="Remy Sharp" src={imgLink} />
+        </Grid>
+        
+        <Grid justifyContent="left" item xs zeroMinWidth>
+        <h4 style={{ margin: 0, textAlign: "left" }}>Michel Michel</h4>
+        <p style={{ textAlign: "left" }}>
+            super dope{" "}
+        </p>
+        <p style={{ textAlign: "left", color: "gray" }}>
+            posted 1 minute ago
+        </p>
+        <div className= {classes.post__options}>
+            <div className= {classes.post__option}>
+                <ThumbUpIcon />
+                <p>Like</p>
+            </div>
+
+            <div className= {classes.post__option}>
+                <ChatBubbleOutlineIcon
+                    onClick={handleCommentOpen('paper')}
+                />
+                <p onClick={handleCommentOpen('paper')}>Comment</p>
+            </div>
+
+        </div>
+        </Grid>
+    </Grid>
+    </Paper>
+
+    <Divider variant="fullWidth" style={{ margin: "30px 0" }} />
+    <div className= {classes.post}>
+        {/* <div className= {classes.post_top}>
+            <Avatar src={profilePic} className= {classes.post__avatar} />
+            <div className= {classes.post__topInfo}>
+                <h3>{username}</h3>
+                <p>{"Date is " + currentTime.getDate() + ", Month is " + currentTime.getMonth()}</p>
+            </div>
+        </div>
+
+        <div className= {classes.post__bottom}>
+            <p>{message}</p>
+        </div>
+
+        <div className= {classes.post__image}>
+            <img src={image} alt="post" />
+        </div> */}
+
+        {/* <div className= {classes.post__options}>
+            <div className= {classes.post__option}>
+                <ThumbUpIcon />
+                <p>Like</p>
+            </div>
+
+            <div className= {classes.post__option}>
+                <ChatBubbleOutlineIcon />
+                <p>Comment</p>
+            </div>
+
+        </div> */}
+    </div>
+    {/* POST BOX SECTION*/}
+
+
+    {/* COMMENT SECTION*/}
+    <div>
+        <Dialog
+          open={commentOpen}
+          onClose={handleCommentClose}
+          scroll={"paper"}
+          aria-labelledby="scroll-dialog-title"
+          aria-describedby="scroll-dialog-description"
+        >
+        <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
+        <DialogContent dividers={scroll === 'paper'}>
+            <DialogContentText
+              id="scroll-dialog-description"
+              ref={descriptionElementRefComment}
+              tabIndex={-1}
+            >
+            {[...new Array(50)]
+              .map(
+                () => `Cras mattis consectetur purus sit amet fermentum.
+    Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+    Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+    Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
+                  )
+                  .join('\n')}
+              </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCommentClose}>Subscribe</Button>
+          <Button onClick={handleCommentClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
+        </div>
+    {/* COMMENT SECTION*/}
+    </>
+    ) 
+}
+
 const useStyles = makeStyles((theme) => ({
     post: {
         width: "100%",
@@ -106,168 +250,5 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2),
     },
 }));
-
-const Post =   ({ profilePic, username,timestamp,message,image }) => {
-
-  const {user, setAlert} = NavigationState();
-  const classes = useStyles();
-
-  const {content, setContent} = useState("");
-  const {like, setLike} = useState("");
-  const currentTime = new Date()
-  const {time, setTime} = useState("");
-
-  const handlePostSubmit = async () => {
-    if(content.trim().length === 0) {
-      setAlert({
-        open: true,
-        message:`Your post is empty!`,
-        type: 'error',
-      });
-      return;
-    }
-    
-    try {
-        const postRef = collection(db, "Posts");
-        const postResult = {
-            comment: null,
-            content: "I love guitars",
-            creatorEmail: "abc@def.com", 
-            like: false,
-            time: "November 30, 2022 at 9:32:20 AM UTC-8",
-        };
-        await addDoc(postRef, postResult, {merge: true});
-        
-    } catch (error) {
-        setAlert({
-            open: true,
-            message: error.message,
-            type: 'error',
-        });
-    }
-  };
-
-  const [commentOpen, setCommentOpen] = React.useState(false);
-  const [scroll, setScroll] = React.useState('paper');
-  const handleCommentOpen = () => () => {
-      setCommentOpen(true);
-  };
-  
-  const handleCommentClose = () => {
-      setCommentOpen(false);
-  };
-  const descriptionElementRefComment = React.useRef(null);
-  
-  React.useEffect(() => {
-  if (commentOpen) {
-      const { current: descriptionElement } = descriptionElementRefComment;
-      if (descriptionElement !== null) {
-      descriptionElement.focus();
-      }
-  }
-  }, [commentOpen]);
-
-    return (
-    <>
-    {/* POST BOX SECTION*/}
-    <Paper className={classes.paper}>
-    <Grid container wrap="nowrap" spacing={2} gridColumn="span 4">
-        <Grid item>
-        <Avatar alt="Remy Sharp" src={imgLink} />
-        </Grid>
-        
-        <Grid justifyContent="left" item xs zeroMinWidth>
-        <h4 style={{ margin: 0, textAlign: "left" }}>Michel Michel</h4>
-        <p style={{ textAlign: "left" }}>
-            super dope{" "}
-        </p>
-        <p style={{ textAlign: "left", color: "gray" }}>
-            posted 1 minute ago
-        </p>
-        <div className= {classes.post__options}>
-            <div className= {classes.post__option}>
-                <ThumbUpIcon />
-                <p>Like</p>
-            </div>
-
-            <div className= {classes.post__option}>
-                <ChatBubbleOutlineIcon
-                    onClick={handleCommentOpen('paper')}
-                />
-                <p onClick={handleCommentOpen('paper')}>Comment</p>
-            </div>
-
-        </div>
-        </Grid>
-    </Grid>
-    </Paper>
-
-    <Divider variant="fullWidth" style={{ margin: "30px 0" }} />
-    <div className= {classes.post}>
-        {/* <div className= {classes.post_top}>
-            <Avatar src={profilePic} className= {classes.post__avatar} />
-            <div className= {classes.post__topInfo}>
-                <h3>{username}</h3>
-                <p>{"Date is " + currentTime.getDate() + ", Month is " + currentTime.getMonth()}</p>
-            </div>
-        </div>
-
-        <div className= {classes.post__bottom}>
-            <p>{message}</p>
-        </div>
-
-        <div className= {classes.post__image}>
-            <img src={image} alt="post" />
-        </div> */}
-
-        {/* <div className= {classes.post__options}>
-            <div className= {classes.post__option}>
-                <ThumbUpIcon />
-                <p>Like</p>
-            </div>
-
-            <div className= {classes.post__option}>
-                <ChatBubbleOutlineIcon />
-                <p>Comment</p>
-            </div>
-
-        </div> */}
-    </div>
-
-    {/* COMMENT SECTION*/}
-    <div>
-        <Dialog
-          open={commentOpen}
-          onClose={handleCommentClose}
-          scroll={"paper"}
-          aria-labelledby="scroll-dialog-title"
-          aria-describedby="scroll-dialog-description"
-        >
-        <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
-        <DialogContent dividers={scroll === 'paper'}>
-            <DialogContentText
-              id="scroll-dialog-description"
-              ref={descriptionElementRefComment}
-              tabIndex={-1}
-            >
-            {[...new Array(50)]
-              .map(
-                () => `Cras mattis consectetur purus sit amet fermentum.
-    Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-    Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-    Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-                  )
-                  .join('\n')}
-              </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCommentClose}>Cancel</Button>
-          <Button onClick={handleCommentClose}>Subscribe</Button>
-        </DialogActions>
-      </Dialog>
-        </div>
-    </>
-    ) 
-}
 
 export default Post

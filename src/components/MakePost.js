@@ -7,6 +7,12 @@ import { db } from "../firebase";
 
 import { Avatar, makeStyles } from "@material-ui/core"
 
+// import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const useStyles = makeStyles((theme) => ({
     post: {
@@ -29,6 +35,30 @@ const MakePost =   ({  }) => {
   const {time, setTime} = useState("");
 
 
+    {/* POST CREATION SECTION*/}
+    const [scroll, setScroll] = React.useState('paper');
+    const [postCreationOpen, setPostCreationOpen] = React.useState(false);
+
+    const handlePostCreationOpen = () => {
+        setPostCreationOpen(true);
+    };
+
+    const handlePostCreationClose = () => {
+        setPostCreationOpen(false);
+    };
+
+    const descriptionElementRefPostCreation = React.useRef(null);
+
+    React.useEffect(() => {
+    if (postCreationOpen) {
+        const { current: descriptionElement } = descriptionElementRefPostCreation;
+        if (descriptionElement !== null) {
+        descriptionElement.focus();
+        }
+    }
+    }, [postCreationOpen]);
+    {/* POST CREATION SECTION*/}
+
   const handlePostSubmit = async () => {
     if(content.trim().length === 0) {
       setAlert({
@@ -40,7 +70,7 @@ const MakePost =   ({  }) => {
     }
     
     try {
-        const postRef = collection(db, "Posts");
+        const postRef = collection(db, "Posts", "PostID");
         const postResult = {
             comment: null,
             content: "I love guitars",
@@ -61,14 +91,48 @@ const MakePost =   ({  }) => {
 
     return (
     <>
-        <div><Button
-            variant="contained"
-            size="large"
-            style={{ backgroundColor: "#0055A2", marginTop: 126, color:'white',}}
-            onClick={handlePostSubmit}
-        >
+    <div><Button
+        variant="contained"
+        size="large"
+        style={{ backgroundColor: "#0055A2", marginTop: 126, color:'white',}}
+        onClick={handlePostCreationOpen}
+    >
         Write a post!
-        </Button></div>
+    </Button></div>
+
+    {/* POST CREATION SECTION*/}
+    <div>
+    <Dialog
+        open={postCreationOpen}
+        onClose={handlePostCreationClose}
+        scroll={"paper"}
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+    >
+        <DialogTitle id="scroll-dialog-title">Create Post</DialogTitle>
+        <DialogContent dividers={scroll === 'paper'}>
+            <DialogContentText
+              id="scroll-dialog-description"
+              ref={descriptionElementRefPostCreation}
+              tabIndex={-1}
+            >
+            {[...new Array(50)]
+              .map(
+                () => `Cras mattis consectetur purus sit amet fermentum.
+                Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+                Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+                Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
+                  )
+                  .join('\n')}
+              </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handlePostCreationClose}>Subscribe</Button>
+          <Button onClick={handlePostCreationClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
+        </div>
+    {/* POST CREATION SECTION*/}
     </>
     ) 
 }

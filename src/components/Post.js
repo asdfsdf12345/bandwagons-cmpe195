@@ -41,7 +41,7 @@ const Post = ({ thePostID }) => {
         setCreatorEmail(docSnapPost.get("creatorEmail"));
         setContent(docSnapPost.get("content"));
         setLike(docSnapPost.get("like"));
-        setTime(docSnapPost.get("time").toDate().toString());
+        setTime(docSnapPost.get("time").toDate().toLocaleString());
     } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");

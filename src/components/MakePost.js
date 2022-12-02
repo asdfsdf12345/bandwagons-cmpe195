@@ -103,7 +103,7 @@ const MakePost =   ({  }) => {
 
 
     const postID2 = user.uid + Timestamp.now().seconds.toString()
-    const postRef2 = doc(db, "Posts", "hello2");
+    const postRef2 = doc(db, "Posts", postID2);
     const postResult2 = {
         comment: null,
         content: "I love teqball",
@@ -114,6 +114,7 @@ const MakePost =   ({  }) => {
     await setDoc(postRef1, postResult1, {merge: true});
     await setDoc(postRef2, postResult2, {merge: true});
     console.log("Test writing to DB is successful, hells yeah")
+    console.log(user)
   };
   // test command
 

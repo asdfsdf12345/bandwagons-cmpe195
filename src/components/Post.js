@@ -1,8 +1,7 @@
 import React, { createRef, useState } from "react";
 import { NavigationState } from "../NavigationContext";
-import { doc, setDoc, collection, Timestamp, addDoc, Firestore } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection, Timestamp, addDoc, Firestore } from "firebase/firestore";
 import { db } from "../firebase";
-import { query, where, getDocs } from "firebase/firestore";
 
 import { Avatar, makeStyles } from "@material-ui/core"
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
@@ -21,17 +20,47 @@ const imgLink =
   "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
 
 
-const Post = ({ theCreatorEmail, theContent, theLike, theTime }) => {
+const Post = ({ thePostID }) => {
     
 {/* POST BOX SECTION*/}
-  const {user, setAlert} = NavigationState();
+  // const {user, setAlert} = NavigationState();
   const classes = useStyles();
 
-  const {postID, setPostID} = useState("");
-  const {content, setContent} = useState("");
-  const {like, setLike} = useState("");
-  const {time, setTime} = useState("");
-  const currentTime = new Date();
+  const {postID, setPostID} = useState(thePostID)
+  const [creatorEmail, setCreatorEmail] = useState("");
+  const [content, setContent] = useState("");
+  const [like, setLike] = useState("");
+  const [time, setTime] = useState("");
+  const [displayName, setDisplayName] = useState("")
+
+    React.useEffect(async () => {
+    const docRefPost = doc(db, "Posts", thePostID);
+    const docSnapPost = await getDoc(docRefPost);
+    if (docSnapPost.exists()) {
+        console.log("Document data:", docSnapPost.data());
+        setCreatorEmail(docSnapPost.get("creatorEmail"));
+        setContent(docSnapPost.get("content"));
+        setLike(docSnapPost.get("like"));
+        setTime(docSnapPost.get("time").toDate().toString());
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+    }});
+
+
+
+  //To get first and last name
+  React.useEffect(async () => {
+    const docRefUser = doc(db, "Users", creatorEmail);
+    const docSnapUser = await getDoc(docRefUser);
+    if (docSnapUser.exists()) {
+        console.log("Document data:", docSnapUser.data());
+        setDisplayName(docSnapUser.get("firstName") + " " + docSnapUser.get("lastName"));
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+    }});
+  
 {/* POST BOX SECTION*/}
 
 
@@ -47,8 +76,8 @@ const [scroll, setScroll] = React.useState('paper');
   const handleCommentClose = () => {
       setCommentOpen(false);
   };
+
   const descriptionElementRefComment = React.useRef(null);
-  
   React.useEffect(() => {
     //COMMENT BLOCK
   if (commentOpen) {
@@ -59,17 +88,26 @@ const [scroll, setScroll] = React.useState('paper');
   }
   }, [commentOpen]);
 
-  React.useEffect(async () => {
-        //MULTIPLE DATA QUERY BLOCK aka GET DATA
-        const q = query(collection(db, "Posts"), where("creatorEmail", "==", "abc@def.com"));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-            console.log("lmao")
-            console.log(doc.id, " => ", doc.data());
-        });
-    });
+
 {/* COMMENT SECTION*/}
+
+
+{/* LIKE SECTION*/}
+    const handleLike = async () => { 
+        const oppositeLike = !like
+        setLike(oppositeLike)
+        console.log(like)
+        const postLikeRef = doc(db, "Posts", postID);
+        const postLikeResult = {
+            // comment: null,
+            // content: content,
+            // creatorEmail: creatorEmail,
+            like: oppositeLike,
+            // time: time
+        };
+        await setDoc(postLikeRef, postLikeResult, {merge: true});
+    }
+{/* LIKE SECTION*/}
 
     return (
     <>
@@ -77,20 +115,22 @@ const [scroll, setScroll] = React.useState('paper');
     <Paper className={classes.paper}>
     <Grid container wrap="nowrap" spacing={2} gridColumn="span 4">
         <Grid item>
-        <Avatar alt="Remy Sharp" src={imgLink} />
+        <Avatar alt={displayName} src={imgLink} />
         </Grid>
         
         <Grid justifyContent="left" item xs zeroMinWidth>
-        <h4 style={{ margin: 0, textAlign: "left" }}>Michel Michel</h4>
+        <h4 style={{ margin: 0, textAlign: "left" }}>{displayName}</h4>
         <p style={{ textAlign: "left" }}>
-            super dope{" "}
+            {content}
         </p>
         <p style={{ textAlign: "left", color: "gray" }}>
-            posted 1 minute ago
+            posted at {time}
         </p>
         <div className= {classes.post__options}>
             <div className= {classes.post__option}>
-                <ThumbUpIcon />
+                <ThumbUpIcon
+                    onClick={handleLike}
+                />
                 <p>Like</p>
             </div>
 

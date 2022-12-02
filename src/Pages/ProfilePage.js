@@ -100,7 +100,7 @@ const ProfilePage = () => {
     }
     
     try{
-      const result = await setDoc(doc(db, "Users", user.uid), {
+      const result = await setDoc(doc(db, "Users", user.email), {
         // name: name ,
         firstName: firstName,
         lastName: lastName,

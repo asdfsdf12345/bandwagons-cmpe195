@@ -17,3 +17,7 @@ a{
   width: 100%;
 }
 
+#listDiv{
+  height: 1000;
+  width: max-content;
+}

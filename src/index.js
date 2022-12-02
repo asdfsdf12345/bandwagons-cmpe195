@@ -8,7 +8,7 @@ import NavigationContext from './NavigationContext';
 ReactDOM.render(
   <React.StrictMode>
     <NavigationContext>
-    <App />
+      <App />
     </NavigationContext>  
   </React.StrictMode>,
   document.getElementById('root')

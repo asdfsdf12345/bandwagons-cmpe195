@@ -9,6 +9,10 @@ import  Tabs from '@material-ui/core/Tabs';
 import  Tab from '@material-ui/core/Tab';
 import Login from"./Login";
 import Register from"./Register";
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { NavigationState } from '../NavigationContext';
+import { auth } from '../firebase';
+import { useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -26,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoginModal() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -36,22 +40,51 @@ export default function LoginModal() {
     setOpen(false);
   };
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const {setAlert} = NavigationState();
+
+  const provider = new GoogleAuthProvider();
+
+  const signinWithGoogle = () => {
+    signInWithPopup(auth, provider).then( res => {
+      
+      const credential = GoogleAuthProvider.credentialFromResult(res);
+      const token = credential.accessToken;
+      setAlert({
+        open: true,
+        message: `Welcome ${res.user.email}`,
+      })
+      // ...
+    }).catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+    });
+  };
+
   return (
     <div>
       <Button
-        variant = "contained"
+        variant = "contained" 
         style={{
             width: 75,
             height: 40,
             marginRight: 15,
-            backgroundColor: "#ff3333",
-            color: 'white'
+            backgroundColor: "#fc3934",
+            border: 'solid',
+            borderColor: '#fccb00',
+            borderWidth: 2,
+            color: 'white',
         }}
         onClick={handleOpen}
       >
@@ -88,6 +121,7 @@ export default function LoginModal() {
 
                     {value ===0 && <Login handleClose={handleClose}/>}
                     {value ===1 && <Register handleClose={handleClose}/>}
+                    
           </div>
         </Fade>
       </Modal>

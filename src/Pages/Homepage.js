@@ -30,7 +30,7 @@ const Homepage = () => {
         <div><MakePost/></div>
         <div>
           <Post
-            thePostID="3EY641Z4FSYMwAzDnFsNVDw0IaO21670004194"
+            postID="3EY641Z4FSYMwAzDnFsNVDw0IaO21670004194"
           />
         </div> 
       </>

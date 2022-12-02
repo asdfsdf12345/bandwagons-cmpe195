@@ -1,6 +1,6 @@
 import React, { createRef, useState } from "react";
 import { NavigationState } from "../NavigationContext";
-import { doc, setDoc, getDoc, collection, Timestamp, addDoc, Firestore } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, collection, Timestamp, addDoc, Firestore } from "firebase/firestore";
 import { db } from "../firebase";
 
 import { Avatar, makeStyles } from "@material-ui/core"
@@ -20,13 +20,13 @@ const imgLink =
   "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
 
 
-const Post = ({ thePostID }) => {
+const Post = ({ postID }) => {
     
 {/* POST BOX SECTION*/}
   // const {user, setAlert} = NavigationState();
   const classes = useStyles();
 
-  const {postID, setPostID} = useState(thePostID)
+//   const {postID, setPostID} = useState(thePostID)
   const [creatorEmail, setCreatorEmail] = useState("");
   const [content, setContent] = useState("");
   const [like, setLike] = useState("");
@@ -34,7 +34,7 @@ const Post = ({ thePostID }) => {
   const [displayName, setDisplayName] = useState("")
 
     React.useEffect(async () => {
-    const docRefPost = doc(db, "Posts", thePostID);
+    const docRefPost = doc(db, "Posts", postID);
     const docSnapPost = await getDoc(docRefPost);
     if (docSnapPost.exists()) {
         console.log("Document data:", docSnapPost.data());
@@ -94,18 +94,12 @@ const [scroll, setScroll] = React.useState('paper');
 
 {/* LIKE SECTION*/}
     const handleLike = async () => { 
-        const oppositeLike = !like
-        setLike(oppositeLike)
-        console.log(like)
-        const postLikeRef = doc(db, "Posts", postID);
-        const postLikeResult = {
-            // comment: null,
-            // content: content,
-            // creatorEmail: creatorEmail,
-            like: oppositeLike,
-            // time: time
-        };
-        await setDoc(postLikeRef, postLikeResult, {merge: true});
+        const newLike = like + 1;
+        console.log("postID is...  "+ postID)
+        setLike(newLike);
+        const changeLikeRef = doc(db, "Posts", postID);
+        const changeLikeResult = {like: newLike};
+        updateDoc(changeLikeRef, changeLikeResult);
     }
 {/* LIKE SECTION*/}
 
@@ -131,15 +125,15 @@ const [scroll, setScroll] = React.useState('paper');
                 <ThumbUpIcon
                     onClick={handleLike}
                 />
-                <p>Like</p>
+                <p>{like}</p>
             </div>
 
-            <div className= {classes.post__option}>
+            {/* <div className= {classes.post__option}>
                 <ChatBubbleOutlineIcon
                     onClick={handleCommentOpen('paper')}
                 />
                 <p onClick={handleCommentOpen('paper')}>Comment</p>
-            </div>
+            </div> */}
 
         </div>
         </Grid>

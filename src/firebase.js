@@ -10,6 +10,7 @@ const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 const storage = getStorage(firebaseApp);
 const libraries = ["places"];
+const apiKey = "AIzaSyB7pJIcuBN4lEusCDYBVkbQQK6m-EJg12w";
 
 
-export{ auth, db, storage, libraries};
+export{ auth, db, storage, libraries, apiKey};

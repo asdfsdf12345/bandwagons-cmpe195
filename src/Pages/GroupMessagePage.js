@@ -3,17 +3,19 @@ import React from 'react'
 import { useState } from 'react';
 import { useParams } from 'react-router-dom'
 import { FixedSizeList } from 'react-window';
-import FriendList from '../components/FriendList';
+import SendIcon from '@material-ui/icons/Send';
 import GroupCreateModal from '../components/GroupCreateModal';
 import GroupList from '../components/GroupList';
 import GroupRequestModal from '../components/GroupRequestModal';
 import { NavigationState } from '../NavigationContext';
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useEffect } from 'react';
+import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const GroupMessagePage = () => {
     const{gid} = useParams();
-    
+    console.log(gid);
 
     const useStyles = makeStyles((theme) => ({
         appbar: {
@@ -28,26 +30,112 @@ const GroupMessagePage = () => {
       }));
 
     const[messages, setMessages] = useState([]);
+    const[ids, setIds] = useState([]);
     const[message,setMessage] = useState("");
     const {user} = NavigationState();
     
     
 
     useEffect(() => {
-        console.log(message);
-      }, []);
+        getMessages(gid);
+
+       
+      }, [gid]);
 
     const classes = useStyles();
 
+    const handleSend = async() =>{
+
+
+        const docRef = await addDoc(collection(db, "Groups", `${gid}`, "messages"), {
+            message: message,
+            email: user.email,
+            createdAt: serverTimestamp(),
+
+          });
+          console.log("Document written with ID: ", docRef.id);
+
+        console.log(message);
+    }
+
+    const getMessages = async(gid) =>{
+        const messageRef = collection(db, "Groups", `${gid}`, "messages");
+        const q= query(messageRef, orderBy("createdAt"));
+
+        const unsub= onSnapshot(q, (querySnapshot) => {
+            const results = [];
+            const results2 = [];
+            querySnapshot.forEach((doc) => {
+                results.push(doc.data().message);
+                results2.push(doc.data().email);
+            });
+            setMessages(results);
+            setIds(results2);
+          });
+          console.log(messages);
+        
+          return () => {
+            setMessages([]);
+            unsub();
+        }
+    }
+   
+   
     function renderRow(props) {
         const { index, style } = props;
+       
+        const check = () =>{
+            if(user.email === ids[index] )  return true;
+            return false;
+        }
+
         
+        if(check()){
+            return (
+
+                <ListItem style={style} key={index}>
+                    <ListItemText style={{color:"white", display:"flex", flexDirection:"row" }} 
+                    primary={
+                        <div>
+                            <div style={{maxWidth:"max-content", height: 50, backgroundColor:"#fc3934", borderRadius: '10px', padding:'10px 20px'}} >
+                            {messages[index]}
+                            </div>
+                            <div style={{fontSize:12, color:"black"}}>
+                            {`Sent by: ${ids[index]}`}
+                            </div>
+                        </div>
+                        }
+                    >  </ListItemText> 
+                    
+                           
+                  </ListItem>
+              
+            ); 
+        }
+
         return (
-            
-          <ListItem style={style} key={index}>
-            <ListItemText primary={`${messages[index]}`} />
-            <ListItemText secondary={`${messages[index]}`} />          
-          </ListItem>
+
+            <ListItem style={style} key={index}>
+                    
+                    <ListItemText style={{color:"white", display:"flex", flexDirection:"row-reverse" }} 
+                    primary={
+                        <div>
+                            <div style={{maxWidth:"max-content", height: 50, backgroundColor:"#9d0000", borderRadius: '10px', padding:'10px 20px'}} >
+                                {messages[index]}
+                            </div>
+                            <div style={{fontSize:12, color:"black"}}>
+                            {`Sent by: ${ids[index]}`}
+                            </div>
+                        </div>
+                    }
+
+                    >  
+                      
+                    </ListItemText> 
+                    
+                           
+                  </ListItem>
+          
         );
       }
 
@@ -57,7 +145,7 @@ const GroupMessagePage = () => {
     <div>
       <GroupList></GroupList>
       <div style={{
-            width:2100, 
+            width:'80vw', 
             height:'92vh', 
             //borderStyle:"solid",
             borderRightStyle:"none",
@@ -70,7 +158,7 @@ const GroupMessagePage = () => {
         }}> 
             <AutoSizer>
                 {({height, width}) => (
-                <FixedSizeList height={height} width={width} itemSize={100} itemCount={200} 
+                <FixedSizeList height={height} width={width} itemSize={100} itemCount={messages.length} 
                 style={{
                 borderRightStyle:"solid",
                 //borderBottomStyle:"solid", 
@@ -91,15 +179,23 @@ const GroupMessagePage = () => {
                 backgroundColor:"#B0B0B0",
                 bottom:42
                 }}>
+            
             <TextareaAutosize 
             aria-label="empty textarea" placeholder="Type a message..." 
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            style={{width:"inherit", minHeight:50, maxHeight:100, fontSize:30}} 
-            />            
-            <IconButton>
+            style={{width:'78vw', minHeight:50, maxHeight:100, fontSize:30, position:"fixed", bottom:42}} 
+            >
+            
+            </TextareaAutosize>    
+            <div
+            style={{width:"2vw", height:50, backgroundColor:"white", float:"right", borderStyle:"solid", borderWidth:1, borderLeftStyle:"none", marginBottom:10}}
+            >
+                <IconButton style={{}} onClick={handleSend}><SendIcon></SendIcon></IconButton>
 
-            </IconButton>
+                </div>       
+            
+           
 
             </div>
       </div>

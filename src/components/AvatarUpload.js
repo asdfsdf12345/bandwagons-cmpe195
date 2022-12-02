@@ -13,7 +13,7 @@ function AvatarUpload() {
 
   const uploadImage = () =>{
     if (image == null) return;
-    const avatarRef = ref(storage, `avatars/${user.uid + "avatar.PNG"}`);
+    const avatarRef = ref(storage, `posts/${user.uid + "avatar.PNG"}`);
     uploadBytes(avatarRef, image).then(() =>{
       setAlert({
         open:"true",
@@ -25,7 +25,7 @@ function AvatarUpload() {
 
   useEffect(() => {
     getDownloadURL(ref(storage, `avatars/${user.uid + "avatar.PNG"}`))
-  .then((url) => {
+    .then((url) => {
     setImgURL(url);
     
   })

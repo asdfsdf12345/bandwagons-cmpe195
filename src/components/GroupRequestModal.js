@@ -103,6 +103,7 @@ export default function GroupRequestModal() {
           
           if (docSnap2.exists()) {
             console.log("Document data:", docSnap2.data());
+            console.log(docSnap2.data().members);
             setMembers([...docSnap2.data().members, user.email]);
             console.log(members);
             

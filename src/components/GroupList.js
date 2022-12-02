@@ -83,7 +83,7 @@ const getNames = async () => {
         
         const results = [];
         for (let i = 0; i < groups.length; i++) {
-            //getFriend(friends[i]);
+            
             const group = await getGroup(groups[i]);
             results.push(group.getName());
           }
@@ -108,7 +108,7 @@ const getGroupDescriptions = async () => {
         
         const results = [];
         for (let i = 0; i < groups.length; i++) {
-            //getFriend(friends[i]);
+            
             const group = await getGroup(groups[i]);
             results.push(group.getGroupDescription());
           }
@@ -144,9 +144,14 @@ const displayGroups = async () => {
     
 }
 
+const changePage = (index) =>{
+  history.push(`/Groups/${groups[index]}`);
+}
+
 //get data as friend class from db
 
 const getGroup = async (name) => {
+
 try{
 console.log(name);
 const docRef = doc(db, "Groups", name).withConverter(groupConverter);
@@ -175,7 +180,7 @@ function renderRow(props) {
 
     return (
         
-      <ListItem button onClick={() => history.push(`/groups/${groups[index]}`)} divider style={style} key={index}>
+      <ListItem button onClick={ () => changePage(index)} divider style={style} key={index}>
         <ListItemText primary={`${names[index]}`} />
         <ListItemText secondary={`${groupDescriptions[index]}`} />
         

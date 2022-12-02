@@ -8,7 +8,7 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import { NavigationState } from '../NavigationContext';
 import { useState } from 'react';
 import { async } from '@firebase/util';
-import { addDoc, collection, doc, getDocs, getDoc, query, where, onSnapshot, deleteDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, getDoc, query, where, onSnapshot, deleteDoc, QuerySnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { FixedSizeList } from 'react-window';
 import PropTypes from 'prop-types';
@@ -17,21 +17,25 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { borderBottom } from '@mui/system';
 import { useEffect } from 'react';
 import '../App.css';
+import { useHistory } from 'react-router-dom';
 
 export default function FriendList() {
 
 //state variables
 const [names, setNames] = useState([]);
 const [bios, setBios] = useState([]);
+const [ids, setIds] = useState([]);
+const history = useHistory();
 const {setAlert, user, friends, setFriends,} = NavigationState();
 
 //friend class 
 
 class Friend {
-    constructor (firstName, lastName, bio ) {
+    constructor (firstName, lastName, bio, docID ) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.bio = bio;
+        this.docID = docID;
     }
 
     toString() {
@@ -45,7 +49,9 @@ class Friend {
     getBio(){
         return this.bio;
     }
-    
+    getDocID(){
+      return this.docID;
+    }
 }
 
 // Firestore data converter
@@ -55,7 +61,7 @@ const friendConverter = {
         return {
             name: friend.firstName,
             state: friend.lastName,
-            country: friend.bio
+            country: friend.bio,
             };
     },
     fromFirestore: (snapshot, options) => {
@@ -118,6 +124,29 @@ const getBios = async () => {
   
 };
 
+const getDocIds = async() =>{
+  try{
+    console.log("hello");
+      const results = [];
+      
+            const q = query((collection(db,"Friends")), where("friends", "array-contains", `${user.email}`));
+            const result = await getDocs(q);
+            result.forEach((doc) => {
+              // doc.data() is never undefined for query doc snapshots
+              console.log(doc.id)
+              results.push(doc.id);
+            });
+      return results;
+  } catch(error){
+    setAlert({
+      open: true,
+      message: error.message,
+      type: 'error',
+    })
+  }
+      
+}
+
 //get both and set state variables
 
 const displayFriends = async () => {
@@ -132,6 +161,10 @@ const displayFriends = async () => {
         setBios(response);
         console.log(bios);
     }) 
+    await getDocIds().then((response) =>{
+        setIds(response);
+        console.log(ids);
+    })
 }
 
 //get data as friend class from db
@@ -158,6 +191,10 @@ setAlert({
 }
 };
 
+const changePage = (index) =>{
+  history.push(`/Friends/${ids[index]}`);
+}
+
 //render row function for window list. USE THIS TO STYLE LIST ITEMS.
 
 function renderRow(props) {
@@ -165,7 +202,7 @@ function renderRow(props) {
 
     return (
         
-      <ListItem divider style={style} key={index}>
+      <ListItem divider button onClick={ () => changePage(index)} style={style} key={index}>
         <ListItemText primary={`${names[index]}`} />
         <ListItemText secondary={`${bios[index]}`} />
         
@@ -180,18 +217,16 @@ function renderRow(props) {
 return (
     
     <div
-       style={{height: '92vh', width: '30vh'}}
+      style={{height: '92vh', width:"20vw", float:"left", position:"fixed"}}
         
     >
         <AutoSizer>
         {({height, width}) => (
             <FixedSizeList height={height} width={width} itemSize={100} itemCount={names.length} 
             style={{ 
-            borderRightStyle:"solid",
-            borderBottomStyle:"solid", 
-            borderColor: "#fc3934",
-            borderWidth: 3,
-            backgroundColor:"#fce547",
+              borderColor: "#fc3934",
+              borderWidth: 3,
+              backgroundColor:"#F8B41E",
             }}>
             {renderRow}
         </FixedSizeList>

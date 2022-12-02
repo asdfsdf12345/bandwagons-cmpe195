@@ -19,12 +19,6 @@ const Banner = () => {
   return (
     <div>
         <img id = 'banner1' src='./Banner.jpg'/>
-        <Container className={classes.bannerContent} maxWidth='lg' >
-            <div>
-                
-            </div>
-
-        </Container>
       
     </div>
   )

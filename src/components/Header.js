@@ -6,7 +6,8 @@ import { Link, useHistory } from 'react-router-dom';
 import NavigationContext, { NavigationState } from '../NavigationContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
-
+import SearchIcon from '@material-ui/icons/Search';
+import { wait } from '@testing-library/user-event/dist/utils';
 
 const useStyles = makeStyles(() => ({
     title:{
@@ -74,6 +75,11 @@ const Header = () => {
         });
         
         handleClose();
+        history.push('/');
+
+        wait(200);
+        window.location.reload(true);
+       
     }
 
   return (
@@ -84,8 +90,9 @@ const Header = () => {
                 <Typography onClick={() => history.push('/')} className={classes.title}>
                     Bandwagons
                 </Typography>
+                <SearchIcon style={{width:40, height:40,}}></SearchIcon>
                 <Typography onClick={() => history.push('/finder')} className={classes.Explore}>
-                    Explore BandWagons
+                      Explore BandWagons
                 </Typography>
                 {user ? 
                 <IconButton 

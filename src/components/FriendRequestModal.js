@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import { Button, ButtonGroup, Divider, IconButton, ListItem, ListItemSecondaryAction, ListItemText, TextField } from '@material-ui/core';
+import { Button, ButtonGroup, Divider, IconButton, ListItem, ListItemSecondaryAction, ListItemText, TextField, Typography } from '@material-ui/core';
 import { NavigationState } from '../NavigationContext';
 import { useState } from 'react';
 import { async } from '@firebase/util';
@@ -140,7 +140,7 @@ const declineRequest = async (pos) => {
   
     return (
         
-      <ListItem style={style} key={index}>
+      <ListItem divider style={style} key={index}>
         <ListItemText primary={`${requested[index]}`} />
             
               <ButtonGroup>
@@ -197,9 +197,11 @@ const declineRequest = async (pos) => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <div> Pending Friend Requests</div>
+            <Typography align='center'>Add by Suggestion:</Typography>
+            <div style={{width:350, height:100, borderStyle:"solid"}}> </div>
+            <Typography> Pending Friend Requests:</Typography>
 
-            <div >
+            <div style={{borderStyle:"solid", borderWidth:1}}>
                 <FixedSizeList height={400} width={320} itemSize={48} itemCount={requested.length }>
                     {renderRow}
                 </FixedSizeList>

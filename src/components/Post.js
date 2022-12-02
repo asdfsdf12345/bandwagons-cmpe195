@@ -2,7 +2,7 @@ import React, { createRef, useState } from "react";
 import { NavigationState } from "../NavigationContext";
 import { doc, setDoc, collection, Timestamp, addDoc, Firestore } from "firebase/firestore";
 import { db } from "../firebase";
-// , profilePic, image, username, timestamp, message
+import { query, where, getDocs } from "firebase/firestore";
 
 import { Avatar, makeStyles } from "@material-ui/core"
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
@@ -21,7 +21,7 @@ const imgLink =
   "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
 
 
-const Post =  ({ profilePic, username,timestamp,message,image }) => {
+const Post = ({ theCreatorEmail, theContent, theLike, theTime }) => {
     
 {/* POST BOX SECTION*/}
   const {user, setAlert} = NavigationState();
@@ -50,6 +50,7 @@ const [scroll, setScroll] = React.useState('paper');
   const descriptionElementRefComment = React.useRef(null);
   
   React.useEffect(() => {
+    //COMMENT BLOCK
   if (commentOpen) {
       const { current: descriptionElement } = descriptionElementRefComment;
       if (descriptionElement !== null) {
@@ -57,6 +58,17 @@ const [scroll, setScroll] = React.useState('paper');
       }
   }
   }, [commentOpen]);
+
+  React.useEffect(async () => {
+        //MULTIPLE DATA QUERY BLOCK aka GET DATA
+        const q = query(collection(db, "Posts"), where("creatorEmail", "==", "abc@def.com"));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+            console.log("lmao")
+            console.log(doc.id, " => ", doc.data());
+        });
+    });
 {/* COMMENT SECTION*/}
 
     return (
@@ -130,7 +142,6 @@ const [scroll, setScroll] = React.useState('paper');
 
     {/* COMMENT SECTION*/}
     <div>
-        {handleCommentClose}
         <Dialog
           open={commentOpen}
           onClose={handleCommentClose}

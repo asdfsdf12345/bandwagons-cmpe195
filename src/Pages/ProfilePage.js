@@ -1,6 +1,7 @@
 import React, { createRef, useState } from "react";
 import Button from '@material-ui/core/Button'
 import TemporaryDrawer from '../components/ProfileDrawer'
+import BasicTextFields from "../components/TextField";
 import HobbyTagChoices from '../components/HobbyTag'
 import ProfileCreationButton from '../components/ProfileCreation'
 import AvatarUpload from "../components/AvatarUpload";
@@ -132,7 +133,13 @@ const ProfilePage = () => {
 
   return (
     <>
-      {/*
+      <Typography component="div">
+      <Box sx={{ textAlign: 'center', 
+        fontSize: 32,
+        fontWeight: 'bold',
+        textTransform: 'capitalize',
+        m: 2 }}>Profile</Box>
+      </Typography>
       <><BasicTextFields/></>
       <br/>
       <Box sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16}}>Avatar</Box>

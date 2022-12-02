@@ -89,13 +89,42 @@ const MakePost =   ({  }) => {
     }
   };
 
+  // test command
+  const testThePost = async () => {
+    const postID1 = user.uid + Timestamp.now().seconds.toString()
+    const postRef1 = doc(db, "Posts", "hello1");
+    const postResult1 = {
+        comment: null,
+        content: "I love basketball",
+        creatorEmail: "abc@def.com", 
+        like: false,
+        time: Timestamp.now(),
+    };
+
+
+    const postID2 = user.uid + Timestamp.now().seconds.toString()
+    const postRef2 = doc(db, "Posts", "hello2");
+    const postResult2 = {
+        comment: null,
+        content: "I love teqball",
+        creatorEmail: "abc@def.com", 
+        like: false,
+        time: Timestamp.now(),
+    };
+    await setDoc(postRef1, postResult1, {merge: true});
+    await setDoc(postRef2, postResult2, {merge: true});
+    console.log("Test writing to DB is successful, hells yeah")
+  };
+  // test command
+
     return (
     <>
     <div><Button
         variant="contained"
         size="large"
         style={{ backgroundColor: "#0055A2", marginTop: 126, color:'white',}}
-        onClick={handlePostCreationOpen}
+        // onClick={handlePostCreationOpen}
+        onClick={testThePost}
     >
         Write a post!
     </Button></div>

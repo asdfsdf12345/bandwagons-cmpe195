@@ -130,6 +130,7 @@ const [scroll, setScroll] = React.useState('paper');
 
     {/* COMMENT SECTION*/}
     <div>
+        {handleCommentClose}
         <Dialog
           open={commentOpen}
           onClose={handleCommentClose}
@@ -137,7 +138,7 @@ const [scroll, setScroll] = React.useState('paper');
           aria-labelledby="scroll-dialog-title"
           aria-describedby="scroll-dialog-description"
         >
-        <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
+        {/* <DialogTitle id="scroll-dialog-title">Comment</DialogTitle> */}
         <DialogContent dividers={scroll === 'paper'}>
             <DialogContentText
               id="scroll-dialog-description"
@@ -147,7 +148,7 @@ const [scroll, setScroll] = React.useState('paper');
             {[...new Array(50)]
               .map(
                 () => `Cras mattis consectetur purus sit amet fermentum.
-    Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+    Cras justo odio, dapibus ac facilisis in, egestas eget quam. 
     Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
     Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
                   )

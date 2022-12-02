@@ -99,6 +99,7 @@ const ProfilePage = () => {
       return;
     }
     
+
     try{
       const result = await setDoc(doc(db, "Users", user.uid), {
         firstName: firstName ,
@@ -110,6 +111,7 @@ const ProfilePage = () => {
         tag2: formats[2],
         tag3: formats[3],
         state: state,
+        photoURL: user.photoURL,
       },
      {merge: true}
       );

@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Box, Button, TextField } from "@material-ui/core";
 import { NavigationState } from '../NavigationContext';
 import { auth } from '../firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useHistory } from 'react-router-dom';
+import { GoogleAuthProvider } from "firebase/auth";
+
 
 
 const Login = ({handleClose}) => {
 
+  const provider = new GoogleAuthProvider();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const {setAlert} = NavigationState();
@@ -34,7 +37,7 @@ const Login = ({handleClose}) => {
           });
 
           handleClose();
-          history.push("/profile")
+          history.push("/finder");
 
     }catch (error) {
       setAlert({
@@ -44,6 +47,34 @@ const Login = ({handleClose}) => {
       });
     }
   };
+  
+  const signInWithGoogle = () =>{
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        setAlert({
+          open:true,
+          message: `Sign In Successful. Welcome Back ${result.user.email}`,
+          type:"success",
+        });
+        
+        handleClose();
+        history.push("/finder");
+        
+      }).catch((error) => {
+        // Handle Errors here.
+        setAlert({
+          open:true,
+          message: error.message,
+          type:"error"
+        });
+        
+  });
+  };
+
+
   
   return (
     <Box 
@@ -71,10 +102,20 @@ const Login = ({handleClose}) => {
           <Button
             variant="contained"
             size="large"
-            style={{ backgroundColor: "#ff3333", marginTop: 126, color:'white',}}
+            style={{ backgroundColor: "#ff3333", marginTop: 126, color:'white', marginBottom:30}}
             onClick={handleSubmit}
           >
             Login
+          </Button>
+          <div style={{display:"block", marginLeft:"auto", marginRight:"auto"}}> Or Instead:</div>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            style={{  marginTop: 10, color:'white',}}
+            onClick={signInWithGoogle}
+          >
+            Sign In With Google
           </Button>
         </Box>
   )

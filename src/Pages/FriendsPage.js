@@ -43,7 +43,7 @@ const FriendsPage = () => {
       <FriendList></FriendList>
      
         <AppBar
-        color="transparent"
+        color="white"
           className={classes.appbar}
         >
           <div>

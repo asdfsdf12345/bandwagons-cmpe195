@@ -16,7 +16,6 @@ const NavigationContext = ({ children }) => {
     type: " success"
   })
 
-
   useEffect(() => {
 
     onAuthStateChanged(auth, (user) => {

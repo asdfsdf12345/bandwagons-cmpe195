@@ -6,11 +6,11 @@ import NavigationContext from './NavigationContext';
 
 
 ReactDOM.render(
-  <React.StrictMode>
+  
     <NavigationContext>
       <App />
-    </NavigationContext>  
-  </React.StrictMode>,
+    </NavigationContext>,  
+  
   document.getElementById('root')
 );
 

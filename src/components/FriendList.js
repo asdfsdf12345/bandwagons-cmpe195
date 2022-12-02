@@ -180,13 +180,19 @@ function renderRow(props) {
 return (
     
     <div
-       style={{height: '95vh'}}
-       
+       style={{height: '92vh', width: '30vh'}}
+        
     >
         <AutoSizer>
         {({height, width}) => (
-            <FixedSizeList height={height} width={width} itemSize={100} itemCount={names.length} style={{borderLeftStyle:"solid", borderColor: '#fccb00',
-            borderWidth: 2,}}>
+            <FixedSizeList height={height} width={width} itemSize={100} itemCount={names.length} 
+            style={{ 
+            borderRightStyle:"solid",
+            borderBottomStyle:"solid", 
+            borderColor: "#fc3934",
+            borderWidth: 3,
+            backgroundColor:"#fce547",
+            }}>
             {renderRow}
         </FixedSizeList>
         )}

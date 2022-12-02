@@ -16,6 +16,16 @@ const useStyles = makeStyles(() => ({
       marginLeft: 0, 
     },
 
+    Explore:{
+        flex: 1,
+        fontWeight: "bold",
+        cursor: "pointer",
+        display: "block",
+        marginLeft: "auto", 
+        marginRight:300,
+        fontSize: 30
+      },
+
     appbar:{
         color: "white",
         outline: "#fc3934",
@@ -73,6 +83,9 @@ const Header = () => {
             <Toolbar>
                 <Typography onClick={() => history.push('/')} className={classes.title}>
                     Bandwagons
+                </Typography>
+                <Typography onClick={() => history.push('/finder')} className={classes.Explore}>
+                    Explore BandWagons
                 </Typography>
                 {user ? 
                 <IconButton 

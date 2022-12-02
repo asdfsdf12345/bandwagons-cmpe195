@@ -175,7 +175,7 @@ function renderRow(props) {
 
     return (
         
-      <ListItem button onClick={() => history.push(`/groups/${names[index]}`)} divider style={style} key={index}>
+      <ListItem button onClick={() => history.push(`/groups/${groups[index]}`)} divider style={style} key={index}>
         <ListItemText primary={`${names[index]}`} />
         <ListItemText secondary={`${groupDescriptions[index]}`} />
         
@@ -190,13 +190,19 @@ function renderRow(props) {
 return (
     
     <div
-       style={{height: '95vh'}}
+      style={{height: '92vh', width:"20vw", float:"left", position:"fixed"}}
        
     >
         <AutoSizer>
         {({height, width}) => (
-            <FixedSizeList height={height} width={width} itemSize={100} itemCount={names.length} style={{borderLeftStyle:"solid", borderColor: '#fccb00',
-            borderWidth: 2,}}>
+            <FixedSizeList height={height} width={width} itemSize={100} itemCount={names.length} 
+            style={{
+            //borderRightStyle:"solid",
+            //borderBottomStyle:"solid", 
+            borderColor: "#fc3934",
+            borderWidth: 3,
+            backgroundColor:"#F8B41E",
+            }}>
             {renderRow}
         </FixedSizeList>
         )}

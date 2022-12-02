@@ -7,7 +7,7 @@ import List from "@material-ui/core/List";
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
-import { AppBar, Button, makeStyles, Toolbar } from "@material-ui/core";
+import { AppBar, Button, makeStyles, Toolbar, Typography, Box } from "@material-ui/core";
 import SpringModal from "../components/FriendAddModal";
 import TransitionsModal from "../components/FriendAddModal";
 import FriendAddModal from "../components/FriendAddModal";
@@ -43,7 +43,13 @@ const GroupsPage = () => {
     <div
     
     >
-
+      <Typography component="div">
+        <Box sx={{ textAlign: 'center', 
+          fontSize: 32,
+          fontWeight: 'bold',
+          textTransform: 'capitalize',
+          m: 2 }}>Groups</Box>
+      </Typography>
       <GroupFind></GroupFind>
       <GroupList></GroupList>
      

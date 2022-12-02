@@ -7,7 +7,8 @@ import List from "@material-ui/core/List";
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
-import { AppBar, Button, makeStyles, Toolbar } from "@material-ui/core";
+import { AppBar, Button, makeStyles, Toolbar, Typography } from "@material-ui/core";
+import Box from '@mui/material/Box';
 import SpringModal from "../components/FriendAddModal";
 import TransitionsModal from "../components/FriendAddModal";
 import FriendAddModal from "../components/FriendAddModal";
@@ -35,10 +36,16 @@ const FriendsPage = () => {
   const classes = useStyles();
 
   return (
-    <div
-    
-    >
 
+    
+    <div>
+      <Typography component="div">
+        <Box sx={{ textAlign: 'center', 
+          fontSize: 32,
+          fontWeight: 'bold',
+          textTransform: 'capitalize',
+          m: 2 }}>Friends</Box>
+      </Typography>
       <FriendFind></FriendFind>
       <FriendList></FriendList>
      

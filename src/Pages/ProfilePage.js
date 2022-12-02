@@ -141,6 +141,14 @@ const ProfilePage = () => {
       <br/><br/><br/>
       <Button variant="contained">Save Profile</Button>
   */}
+
+    <Typography component="div">
+      <Box sx={{ textAlign: 'center', 
+        fontSize: 32,
+        fontWeight: 'bold',
+        textTransform: 'capitalize',
+        m: 2 }}>Profile</Box>
+    </Typography>
       <Box
       className= {classes.outer}
   

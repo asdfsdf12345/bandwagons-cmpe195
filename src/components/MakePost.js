@@ -5,7 +5,7 @@ import { doc, setDoc, collection, Timestamp, addDoc, Firestore } from "firebase/
 import { db } from "../firebase";
 // , profilePic, image, username, timestamp, message
 
-import { Avatar, makeStyles } from "@material-ui/core"
+import { Avatar, makeStyles, TextField } from "@material-ui/core"
 
 // import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -28,12 +28,7 @@ const MakePost =   ({  }) => {
 
   const {user, setAlert} = NavigationState();
   const classes = useStyles();
-
-  const {content, setContent} = useState("");
-  const {like, setLike} = useState("");
-  const currentTime = new Date()
-  const {time, setTime} = useState("");
-
+  const [content, setContent] = useState("");
 
     {/* POST CREATION SECTION*/}
     const [scroll, setScroll] = React.useState('paper');
@@ -70,15 +65,16 @@ const MakePost =   ({  }) => {
     }
     
     try {
-        const postRef = collection(db, "Posts", "PostID");
-        const postResult = {
-            comment: null,
-            content: "I love guitars",
-            creatorEmail: "abc@def.com", 
-            like: false,
-            time: "November 30, 2022 at 9:32:20 AM UTC-8",
-        };
-        await addDoc(postRef, postResult, {merge: true});
+      const postID = user.uid + Timestamp.now().seconds.toString()
+      const postRef = doc(db, "Posts", postID);
+      const postResult = {
+          comment: null,
+          content: content,
+          creatorEmail: user.email, 
+          like: 0,
+          time: Timestamp.now(),
+      };
+      await setDoc(postRef, postResult, {merge: true});
         
     } catch (error) {
         setAlert({
@@ -89,34 +85,6 @@ const MakePost =   ({  }) => {
     }
   };
 
-  // test command
-  const testThePost = async () => {
-    const postID1 = user.uid + Timestamp.now().seconds.toString()
-    const postRef1 = doc(db, "Posts", "hello1");
-    const postResult1 = {
-        comment: null,
-        content: "I love basketball",
-        creatorEmail: "abc@def.com", 
-        like: false,
-        time: Timestamp.now(),
-    };
-
-
-    const postID2 = user.uid + Timestamp.now().seconds.toString()
-    const postRef2 = doc(db, "Posts", postID2);
-    const postResult2 = {
-        comment: null,
-        content: "I love teqball",
-        creatorEmail: "abc@def.com", 
-        like: false,
-        time: Timestamp.now(),
-    };
-    await setDoc(postRef1, postResult1, {merge: true});
-    await setDoc(postRef2, postResult2, {merge: true});
-    console.log("Test writing to DB is successful, hells yeah")
-    console.log(user)
-  };
-  // test command
 
     return (
     <>
@@ -124,8 +92,8 @@ const MakePost =   ({  }) => {
         variant="contained"
         size="large"
         style={{ backgroundColor: "#0055A2", marginTop: 126, color:'white',}}
-        // onClick={handlePostCreationOpen}
-        onClick={testThePost}
+        onClick={handlePostCreationOpen}
+        // onClick={testThePost}
     >
         Write a post!
     </Button></div>
@@ -136,28 +104,30 @@ const MakePost =   ({  }) => {
         open={postCreationOpen}
         onClose={handlePostCreationClose}
         scroll={"paper"}
+        fullWidth
+        maxWidth="sm"
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
     >
         <DialogTitle id="scroll-dialog-title">Create Post</DialogTitle>
-        <DialogContent dividers={scroll === 'paper'}>
-            <DialogContentText
-              id="scroll-dialog-description"
-              ref={descriptionElementRefPostCreation}
-              tabIndex={-1}
-            >
-            {[...new Array(50)]
-              .map(
-                () => `Cras mattis consectetur purus sit amet fermentum.
-                Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-                Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-                Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-                  )
-                  .join('\n')}
-              </DialogContentText>
-        </DialogContent>
+        
+        <TextField
+        id="standard-bio-input"
+        type="postContent"
+        multiline
+        rows={9}
+        variant="outlined"
+        value={content}
+        onChange={(e) => {
+          setContent(e.target.value)
+        }}
+      />
+        
         <DialogActions>
-          <Button onClick={handlePostCreationClose}>Subscribe</Button>
+          <Button onClick={() => {
+            handlePostSubmit()
+            handlePostCreationClose()
+          }}>Submit</Button>
           <Button onClick={handlePostCreationClose}>Close</Button>
         </DialogActions>
       </Dialog>

@@ -23,10 +23,8 @@ const imgLink =
 const Post = ({ postID }) => {
     
 {/* POST BOX SECTION*/}
-  // const {user, setAlert} = NavigationState();
   const classes = useStyles();
 
-//   const {postID, setPostID} = useState(thePostID)
   const [creatorEmail, setCreatorEmail] = useState("");
   const [content, setContent] = useState("");
   const [like, setLike] = useState("");

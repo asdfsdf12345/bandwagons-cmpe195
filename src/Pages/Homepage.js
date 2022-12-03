@@ -27,50 +27,22 @@ const Homepage = () => {
             doc.id
           )
       });
-      setPostQueueArray(queryResult);
+      setPostQueueArray(queryResult)
       console.log(postQueueArray);
     }});
-
-
-  function renderPost(props) {
-    const { index, style } = props;
-
-    return (
-        
-      <ListItem style={style} key={index}>
-        <Post postID = {postQueueArray[index]}/>
-        
-            
-              
-              
-      </ListItem>
-      
-    );
-  }
-
 
   if (user) {
     return (
       <>
-        {/* <div><MakePost/></div> */}
+        <div><MakePost/></div>
         {/* <Grid container spacing={1}>
           {postQueueArray}
         </Grid> */}
-        <Post
-              postID={doc.id}
-            />
-      
-      <div
-       style={{height: '95vh'}}
-      >
-        <AutoSizer>
-        {({height, width}) => (
-            <FixedSizeList height={height} width={width} itemSize={100} itemCount={names.length}>
-            {renderPost}
-        </FixedSizeList>
-        )}
-        </AutoSizer>,          
-        </div>  
+        <div>
+          {postQueueArray.map((thePostID) => {
+            return <Post postID={thePostID} />
+          })}
+        </div>
         {/* {console.log({postQueueArray})} */}
       </>
     )

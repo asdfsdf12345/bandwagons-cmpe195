@@ -7,8 +7,10 @@ import AvatarUpload from "../components/AvatarUpload";
 import { NavigationState } from "../NavigationContext";
 import { Box, makeStyles, MenuItem, TextField, Typography } from "@material-ui/core";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { useEffect } from "react";
+import { getDownloadURL, ref } from "firebase/storage";
 
 const useStyles = makeStyles((theme) => ({
   outer: {
@@ -28,6 +30,12 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  ToggleButton: {
+    minWidth:200,
+    backgroundColor:"#fc3934",
+    color:"red"
   },
 
   bio: {
@@ -81,13 +89,14 @@ const ProfilePage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName ]= useState("");
   const [bio, setBio ]= useState("");
+  const [city, setCity ]= useState("");
   const [state, setState] = useState('');
 
   const handleStateChange = (event) => {
     setState(event.target.value);
   };
 
-  const {setAlert, user} = NavigationState();
+  const {setAlert, user, photo, setPhoto} = NavigationState();
 
   const handleSubmit = async () => {
     if(formats.length <4 || formats.length >4) {
@@ -97,21 +106,18 @@ const ProfilePage = () => {
         type: 'error',
       });
       return;
-    }
-    
+    }    
 
     try{
-      const result = await setDoc(doc(db, "Users", user.uid), {
+      const result = await setDoc(doc(db, "Users", user.email), {
         firstName: firstName ,
         lastName: lastName,
         bio: bio,
         uid: user.uid,
         email: user.email,
-        tag1: formats[1],
-        tag2: formats[2],
-        tag3: formats[3],
+        tags:[formats[1], formats[2], formats[3]],
         state: state,
-        photoURL: user.photoURL,
+        photoURL: photo,
       },
      {merge: true}
       );
@@ -143,11 +149,13 @@ const ProfilePage = () => {
       <br/><br/><br/>
       <Button variant="contained">Save Profile</Button>
   */}
+  <Typography variant="h1" align="center"> Profile</Typography>
       <Box
       className= {classes.outer}
   
   
   >
+    <Box></Box>
       <Box
       component="form"
       noValidate
@@ -156,31 +164,31 @@ const ProfilePage = () => {
     >
 
       <TextField
-        id="standard-name-input"
+        id="outlined-name-input"
         label="first name"
         type="name"
-        variant="standard"
+        variant="outlined"
         value={firstName}
         onChange={(e) => setFirstName(e.target.value)}
       />
 
       <TextField
-        id="standard-last-name-input"
+        id="outlined-last-name-input"
         label="last name"
         type="lastName"
-        variant="standard"
+        variant="outlined"
         value={lastName}
         onChange={(e) => setLastName(e.target.value)}
       />
 
       <TextField
-        id="standard-states-select"
+        id="outlined-states-select"
         select
         label="State"
         value={state}
         onChange={handleStateChange}
         helperText="Please select your state"
-        variant="standard"
+        variant="outlined"
       >
         {states.map((option) => (
           <MenuItem key={option.value} value={option.value}>
@@ -190,8 +198,20 @@ const ProfilePage = () => {
       </TextField>
     </Box>
       
+    <div>
     <TextField
-        id="standard-bio-input"
+        id="outlined-city-input"
+        label="city"
+        type="city"
+        variant="outlined"
+        value={city}
+        style={{marginLeft:10}}
+        onChange={(e) => setCity(e.target.value)}
+      />
+      </div>
+
+    <TextField
+        id="outlined-bio-input"
         label="Bio"
         className={classes.bio}
         multiline
@@ -202,58 +222,94 @@ const ProfilePage = () => {
         />
     
 
-    <div>
+    <div style={{maxWidth:200, marginTop:50, marginLeft:10}}>
+        <ToggleButtonGroup
+        style={{minWidth:300}}
+        value={formats}
+        onChange={handleFormat}
+        aria-label="text formatting"
+        >
+            <ToggleButton className={classes.ToggleButton} value="Painting" aria-label="Painting">Painting</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Crafts" aria-label="Crafts">Crafts</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Music" aria-label="Music">Music</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Dance" aria-label="Dance">Dance</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Literary" aria-label="Literary">Literary</ToggleButton>
+        </ToggleButtonGroup>
+
+        <ToggleButtonGroup
+        style={{minWidth:300}}
+        value={formats}
+        onChange={handleFormat}
+        aria-label="text formatting"
+        >
+            <ToggleButton className={classes.ToggleButton} value="Discussion/Debate" aria-label="Discussion/Debate">Discussion/Debate</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Tutor/Education" aria-label="Tutor/Education">Tutor/Education</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Career" aria-label="Career">Career</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Team Sports" aria-label="Team Sports">Team Sports</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Martial Arts" aria-label="Martial Arts">Martial Arts</ToggleButton>
+        </ToggleButtonGroup>
         <ToggleButtonGroup
         value={formats}
         onChange={handleFormat}
         aria-label="text formatting"
         >
-            <ToggleButton value="Painting" aria-label="Painting">Painting</ToggleButton>
-            <ToggleButton value="Crafts" aria-label="Crafts">Crafts</ToggleButton>
-            <ToggleButton value="Music" aria-label="Music">Music</ToggleButton>
-            <ToggleButton value="Dance" aria-label="Dance">Dance</ToggleButton>
-            <ToggleButton value="Literary" aria-label="Literary">Literary</ToggleButton>
-            <ToggleButton value="Discussion/Debate" aria-label="Discussion/Debate">Discussion/Debate</ToggleButton>
-            <ToggleButton value="Tutor/Education" aria-label="Tutor/Education">Tutor/Education</ToggleButton>
-            <ToggleButton value="Career" aria-label="Career">Career</ToggleButton>
-            <ToggleButton value="Team Sports" aria-label="Team Sports">Team Sports</ToggleButton>
-            <ToggleButton value="Martial Arts" aria-label="Martial Arts">Martial Arts</ToggleButton>
+          <ToggleButton className={classes.ToggleButton} value="Fitness" aria-label="Fitness">Fitness</ToggleButton>
+          <ToggleButton className={classes.ToggleButton} value="Outdoor" aria-label="Outdoor">Outdoor</ToggleButton>
+          <ToggleButton className={classes.ToggleButton} value="Motorsports" aria-label="Motorsports">Motorsports</ToggleButton>
+          <ToggleButton className={classes.ToggleButton} value="Extreme" aria-label="Extreme">Extreme</ToggleButton>
+          <ToggleButton className={classes.ToggleButton} value="Nature" aria-label="Nature">Nature</ToggleButton>
+        </ToggleButtonGroup>
+      
+        <ToggleButtonGroup
+        value={formats}
+        onChange={handleFormat}
+        aria-label="text formatting"
+        >
+          <ToggleButton className={classes.ToggleButton} value="Relaxing/Tranquil" aria-label="Relaxing/Tranquil">Relaxing/Tranquil</ToggleButton>
+          <ToggleButton className={classes.ToggleButton} value="Health" aria-label="Health">Health</ToggleButton>
+          <ToggleButton className={classes.ToggleButton} value="Volunteer" aria-label="Volunteer">Volunteer</ToggleButton>
+          <ToggleButton className={classes.ToggleButton} value="Gardening" aria-label="Gardening">Gardening</ToggleButton>
+          <ToggleButton className={classes.ToggleButton} value="Collecting" aria-label="Collecting">Collecting</ToggleButton>
       </ToggleButtonGroup>
+
       <ToggleButtonGroup
       value={formats}
       onChange={handleFormat}
       aria-label="text formatting"
       >
-          <ToggleButton value="Fitness" aria-label="Fitness">Fitness</ToggleButton>
-          <ToggleButton value="Outdoor" aria-label="Outdoor">Outdoor</ToggleButton>
-          <ToggleButton value="Motorsports" aria-label="Motorsports">Motorsports</ToggleButton>
-          <ToggleButton value="Extreme" aria-label="Extreme">Extreme</ToggleButton>
-          <ToggleButton value="Nature" aria-label="Nature">Nature</ToggleButton>
-          <ToggleButton value="Relaxing/Tranquil" aria-label="Relaxing/Tranquil">Relaxing/Tranquil</ToggleButton>
-          <ToggleButton value="Health" aria-label="Health">Health</ToggleButton>
-          <ToggleButton value="Volunteer" aria-label="Volunteer">Volunteer</ToggleButton>
-          <ToggleButton value="Gardening" aria-label="Gardening">Gardening</ToggleButton>
-          <ToggleButton value="Collecting" aria-label="Collecting">Collecting</ToggleButton>
-      </ToggleButtonGroup>
-      <ToggleButtonGroup
-      value={formats}
-      onChange={handleFormat}
-      aria-label="text formatting"
-      >
-            <ToggleButton value="Tabletop Games" aria-label="Tabletop Games">Tabletop Games</ToggleButton>
-            <ToggleButton value="Clothing" aria-label="Clothing">Clothing</ToggleButton>
-            <ToggleButton value="Cooking" aria-label="Cooking">Cooking</ToggleButton>
-            <ToggleButton value="Engineering/Utility" aria-label="Engineering/Utility">Engineering/Utility</ToggleButton>
-            <ToggleButton value="Restoration" aria-label="Restoration">Restoration</ToggleButton>
-            <ToggleButton value="Animals" aria-label="Animals">Animals</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Tabletop Games" aria-label="Tabletop Games">Tabletop Games</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Clothing" aria-label="Clothing">Clothing</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Cooking" aria-label="Cooking">Cooking</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Engineering/Utility" aria-label="Engineering/Utility">Engineering/Utility</ToggleButton>
+            <ToggleButton className={classes.ToggleButton} value="Restoration" aria-label="Restoration">Restoration</ToggleButton>
+        </ToggleButtonGroup>
+        <ToggleButtonGroup
+          value={formats}
+          onChange={handleFormat}
+          aria-label="text formatting"
+        >
+            <ToggleButton className={classes.ToggleButton} value="Animals" aria-label="Animals">Animals</ToggleButton>
         </ToggleButtonGroup>
     </div>
     </Box>
- 
+    <div style={{marginTop:50}}>
+        <AvatarUpload>
+        
+        </AvatarUpload>
+    </div>
+      
     <Button
-      variant="contained"
-      size="large"
-      style={{ backgroundColor: "#0055A2", marginTop: 126, color:'white',}}
+      variant='contained'
+      style={{
+       
+      position:"fixed",
+      width: 400, 
+      bottom:0,
+      backgroundColor:"#fc3934", 
+      border: 'solid',
+      borderColor: '#fccb00',
+      borderWidth: 2,
+      color: 'white',}}
       onClick={handleSubmit}
       >
       Confirm

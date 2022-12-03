@@ -10,6 +10,7 @@ const NavigationContext = ({ children }) => {
   const[friends, setFriends] = useState([]);
   const[groups, setGroups] = useState([]);
   const[groupRequests, setGroupRequests] = useState([]);
+  const [photo, setPhoto ]= useState("");
   const[alert, setAlert] = useState({
     open:false,
     message:'',
@@ -22,6 +23,7 @@ const NavigationContext = ({ children }) => {
       if (user) setUser(user);
       else setUser(null);
     });
+    
   }, []);
 
   return (
@@ -37,6 +39,8 @@ const NavigationContext = ({ children }) => {
         setGroupRequests,
         groups,
         setGroups,
+        photo,
+        setPhoto,
         
       }}
     >

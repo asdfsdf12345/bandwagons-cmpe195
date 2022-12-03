@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import { Button, ButtonGroup, Divider, IconButton, ListItem, ListItemSecondaryAction, ListItemText, TextField } from '@material-ui/core';
+import { Button, ButtonGroup, Divider, IconButton, ListItem, ListItemSecondaryAction, ListItemText, TextField, Typography } from '@material-ui/core';
 import AutoSizer from "react-virtualized-auto-sizer";
 import { NavigationState } from '../NavigationContext';
 import { useState } from 'react';
@@ -203,8 +203,8 @@ function renderRow(props) {
     return (
         
       <ListItem divider button onClick={ () => changePage(index)} style={style} key={index}>
-        <ListItemText primary={`${names[index]}`} />
-        <ListItemText secondary={`${bios[index]}`} />
+        <ListItemText primary={<div><Typography variant='h4'>{names[index]}</Typography><Typography variant='subtitle1' style={{color:"gray"}}>{bios[index]}</Typography></div>} />
+        
         
             
               

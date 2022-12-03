@@ -12,8 +12,6 @@ import FriendFind from '../components/FriendFind';
 import Description from '../components/Description';
 
 const Homepage = () => {
-    <>
-    <GroupFind></GroupFind>
 
   const {user, setAlert} = NavigationState();
   const {postID, setPostID} = useState("3EY641Z4FSYMwAzDnFsNVDw0IaO21670004194")

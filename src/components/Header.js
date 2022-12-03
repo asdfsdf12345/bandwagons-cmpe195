@@ -1,4 +1,4 @@
-import { IconButton, Menu, MenuItem, AppBar, Container, Toolbar, Typography, makeStyles, Avatar } from '@material-ui/core'
+import { IconButton, Menu, MenuItem, AppBar, Container, Toolbar, Typography, makeStyles } from '@material-ui/core'
 import React from 'react'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import LoginModal from '../Authetication/LoginModal';
@@ -58,7 +58,7 @@ const Header = () => {
         setAnchorEl(event.currentTarget)
     }
 
-    const {user, setAlert, photo} = NavigationState();
+    const {user, setAlert} = NavigationState();
 
     const history = useHistory();
 
@@ -77,9 +77,9 @@ const Header = () => {
         handleClose();
         history.push('/');
 
-        wait(300);
-        window.location.reload(true);
         wait(200);
+        window.location.reload(true);
+       
     }
 
   return (
@@ -94,17 +94,14 @@ const Header = () => {
                 <Typography onClick={() => history.push('/finder')} className={classes.Explore}>
                       Explore BandWagons
                 </Typography>
-                
                 {user ? 
-                <div>
-                <Avatar style={{float:"left"}} src={photo}></Avatar>
                 <IconButton 
                 color="default"
                 onClick={(openMenu)}
                 style={{ width: 0, height: 40, MarginRight: 30 }}
                 >
                     <ArrowDropDownIcon/>
-                </IconButton></div> : <LoginModal/> }
+                </IconButton> : <LoginModal/> }
 
                 <Menu
                     id='navMenu'
@@ -123,6 +120,12 @@ const Header = () => {
                     </MenuItem>
                     <MenuItem
                         onClick={handleClose}
+                        id = 'Events'
+                    >
+                    <Link to="/events" className= {classes.link}>Events </Link> 
+                    </MenuItem>
+                    <MenuItem
+                        onClick={handleClose}
                         id = 'Friends'
                     >
                     <Link to="/friends" className= {classes.link}>Friends </Link> 
@@ -132,6 +135,12 @@ const Header = () => {
                         id = 'Groups'
                     >
                     <Link to="/groups" className= {classes.link}>Groups </Link> 
+                    </MenuItem>
+                    <MenuItem
+                        onClick={handleClose}
+                        id = 'Settings'
+                    >
+                    <Link to="/settings" className= {classes.link}>Settings </Link> 
                     </MenuItem>
                     <MenuItem
                         onClick={logout}

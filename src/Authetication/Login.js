@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, TextField } from "@material-ui/core";
 import { NavigationState } from '../NavigationContext';
 import { auth } from '../firebase';
-import { sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useHistory } from 'react-router-dom';
 import { GoogleAuthProvider } from "firebase/auth";
 
@@ -47,23 +47,6 @@ const Login = ({handleClose}) => {
       });
     }
   };
-
-  const resetPassword = () => {
-    if(!email)return
-    sendPasswordResetEmail(auth, email)
-    .then(() => {
-      setAlert({
-        open:"true",
-        message: "reset email sent",
-        type:"success"
-      })
-     })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ..
-  });
-  }
   
   const signInWithGoogle = () =>{
     signInWithPopup(auth, provider)
@@ -125,7 +108,6 @@ const Login = ({handleClose}) => {
             Login
           </Button>
           <div style={{display:"block", marginLeft:"auto", marginRight:"auto"}}> Or Instead:</div>
-          <Button onClick={resetPassword} style={{color:"blue",}}> forgot password?</Button>
           <Button
             variant="contained"
             color="primary"

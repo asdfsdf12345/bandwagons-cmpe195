@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import { Button, TextField, Typography } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import { NavigationState } from '../NavigationContext';
 import { useState } from 'react';
 import { async } from '@firebase/util';
@@ -111,7 +111,7 @@ export default function FriendAddModal() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <Typography> Enter the email address of the person you'd like to send this request to</Typography>
+            <div> Enter the email address of the person you'd like to send this request to</div>
             <TextField
                 id="email input"
                 label="requestEmail"
@@ -121,16 +121,6 @@ export default function FriendAddModal() {
             />
             <Button
                 variant='contained'
-                style={{
-       
-                  
-                  width: 300, 
-                  height:55,
-                  backgroundColor:"#fc3934", 
-                  border: 'solid',
-                  borderColor: '#fccb00',
-                  borderWidth: 2,
-                  color: 'white',}}
                 onClick= {sendFriendRequest}
             >
                 Send Friend Request

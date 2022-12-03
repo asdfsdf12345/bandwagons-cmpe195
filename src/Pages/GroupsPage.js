@@ -47,9 +47,8 @@ const GroupsPage = () => {
     
     >
 
-      
-      <div>
       <GroupFind></GroupFind>
+      <div>
       <GroupList></GroupList>
       <div style={{
             width:'80vw', 

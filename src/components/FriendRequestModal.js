@@ -197,8 +197,7 @@ const declineRequest = async (pos) => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <Typography align='center'>Add by Suggestion:</Typography>
-            <div style={{width:350, height:100, borderStyle:"solid"}}> </div>
+            
             <Typography> Pending Friend Requests:</Typography>
 
             <div style={{borderStyle:"solid", borderWidth:1}}>

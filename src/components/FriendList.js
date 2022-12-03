@@ -154,16 +154,23 @@ const displayFriends = async () => {
         console.log(response);
         setNames(response);
         console.log(names);
-    }) 
+    }).catch((error) => {
+      console.log(error.message)
+    })
 
     await getBios().then((response) =>{
         console.log(response);
         setBios(response);
         console.log(bios);
-    }) 
+    }).catch((error) => {
+      console.log(error.message)
+    })
+
     await getDocIds().then((response) =>{
         setIds(response);
         console.log(ids);
+    }).catch((error) => {
+      console.log(error.message)
     })
 }
 

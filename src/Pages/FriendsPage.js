@@ -41,7 +41,18 @@ const FriendsPage = () => {
 
       <FriendFind></FriendFind>
       <FriendList></FriendList>
-     
+      <div style={{
+            width:'80vw', 
+            height:'92vh', 
+            //borderStyle:"solid",
+            borderRightStyle:"none",
+            borderTopStyle:"none", 
+            borderColor:"#fc3934",
+            float:"right", 
+            right:0, 
+            position:"fixed",
+            backgroundColor:"#B0B0B0"
+        }}></div>
         <AppBar
         color="white"
           className={classes.appbar}

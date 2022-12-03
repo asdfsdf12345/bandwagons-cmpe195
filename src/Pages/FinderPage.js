@@ -27,7 +27,7 @@ const initial = {
 const mapContainerStyle ={
   float:"right",
   height: '95vh',
-  width: '80vw',
+  width: '79vw',
 }
 
 const options = {
@@ -274,7 +274,7 @@ export default function FinderPage(){
           </FormControl>
           </div>
           <div
-       style={{height: '71vh', width: '20vw', marginTop:20}}
+       style={{height: '71vh', width: '19vw', marginTop:20}}
         
     >
       <Typography style={{marginTop:10, fontWeight:"bold", fontSize:18}}> Search Results:</Typography>

@@ -13,6 +13,8 @@ import { useEffect } from 'react';
 import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 import FriendList from '../components/FriendList';
+import FriendAddModal from '../components/FriendAddModal';
+import FriendRequestModal from '../components/FriendRequestModal';
 
 const FriendMessagePage = () => {
   const{fid} = useParams();
@@ -57,6 +59,7 @@ const FriendMessagePage = () => {
   }
 
   const getMessages = async(fid) =>{
+
     const messageRef = collection(db, "Friends", `${fid}`, "messages");
     const q= query(messageRef, orderBy("createdAt"));
 
@@ -203,8 +206,8 @@ const FriendMessagePage = () => {
           className={classes.appbar}
         >
           <div>
-            <GroupCreateModal></GroupCreateModal>
-            <GroupRequestModal></GroupRequestModal>
+            <FriendAddModal></FriendAddModal>  
+            <FriendRequestModal></FriendRequestModal>
           </div>
         </AppBar>
         

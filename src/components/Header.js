@@ -70,7 +70,6 @@ const Header = () => {
 
         setAlert({
             open:true,
-            type: "success",
             message: "Logout Successful",
         });
         
@@ -105,7 +104,7 @@ const Header = () => {
                 >
                     <ArrowDropDownIcon/>
                 </IconButton></div> : <LoginModal/> }
-
+                    
                 <Menu
                     id='navMenu'
                     anchorEl={anchorEl}

@@ -50,10 +50,12 @@ export default function FriendFind() {
         const querySnapshot = onSnapshot(q, (querySnapshot) => {
         const results = [];
         querySnapshot.forEach((doc) => {
-        if(user.email == friends[0]){
+        if(user.email == doc.data().friends[0]){
         results.push(doc.data().friends[1]);
         }
+        else{
         results.push(doc.data().friends[0]);
+        }
         });
         setFriends(results);
         console.log(friends);
